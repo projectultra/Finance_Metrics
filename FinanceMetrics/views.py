@@ -7,33 +7,36 @@ import django
 import os
 import json
 import datetime
-from dotenv import load_dotenv
 from FinanceMetrics.models import EconomicIndicators
 from FinanceMetrics.models import METAstock
 from FinanceMetrics.models import AAPLstock
 from FinanceMetrics.models import AMZNstock
 from FinanceMetrics.models import NFLXstock
 from FinanceMetrics.models import GOOGstock
-
 from django.shortcuts import render
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FM.settings')
 django.setup()
 # Create your views here.
 def DisplayStock(request):
-    load_dotenv('.venv\.env')
+    tdapi_key=os.environ.get('TWELVEDATAAPI_KEY')
     FetchEconomicIndicators()
-    FetchMETAstock()
-    FetchAAPLStock()
-    FetchAMZNStock()
-    FetchNFLXStock()
-    FetchGOOGStock()
+    FetchMETAstock(tdapi_key)
+    FetchAAPLStock(tdapi_key)
+    FetchAMZNStock(tdapi_key)
+    FetchNFLXStock(tdapi_key)
+    FetchGOOGStock(tdapi_key)
     METAstock.close_price = Predictstock(METAstock)
     AAPLstock.close_price = Predictstock(AAPLstock)
     AMZNstock.close_price = Predictstock(AMZNstock)
     NFLXstock.close_price = Predictstock(NFLXstock)
     GOOGstock.close_price = Predictstock(GOOGstock)
-def FetchMETAstock():
-    tdapi_key=os.getenv('twelvedataAPI_KEY')
+    context = {'METAstock': float(METAstock.close_price),
+                'AAPLstock': float(AAPLstock.close_price),
+                'AMZNstock': float(AMZNstock.close_price),
+                'NFLXstock': float(NFLXstock.close_price),
+                'GOOGstock': float(GOOGstock.close_price),}
+    return render(request, 'FinanceMetrics/Templates/Mainpage.html',context)
+def FetchMETAstock(tdapi_key):
     url='https://api.twelvedata.com/time_series?symbol=META&interval=1min&outputsize=1&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
     data = response.text.split("\n")  # split the text by line
@@ -43,8 +46,7 @@ def FetchMETAstock():
     METAstock.low_price=values[3]
     METAstock.close_price=values[4]
     METAstock.volume=values[5]
-def FetchAAPLStock():
-    tdapi_key=os.getenv('twelvedataAPI_KEY')
+def FetchAAPLStock(tdapi_key):
     url='https://api.twelvedata.com/time_series?symbol=AAPL&interval=1min&outputsize=1&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
     data = response.text.split("\n")  # split the text by line
@@ -54,8 +56,7 @@ def FetchAAPLStock():
     AAPLstock.low_price=values[3]
     AAPLstock.close_price=values[4]
     AAPLstock.volume=values[5]
-def FetchAMZNStock():
-    tdapi_key=os.getenv('twelvedataAPI_KEY')
+def FetchAMZNStock(tdapi_key):
     url='https://api.twelvedata.com/time_series?symbol=AMZN&interval=1min&outputsize=1&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
     data = response.text.split("\n")  # split the text by line
@@ -65,8 +66,7 @@ def FetchAMZNStock():
     AMZNstock.low_price=values[3]
     AMZNstock.close_price=values[4]
     AMZNstock.volume=values[5]
-def FetchNFLXStock():
-    tdapi_key=os.getenv('twelvedataAPI_KEY')
+def FetchNFLXStock(tdapi_key):
     url='https://api.twelvedata.com/time_series?symbol=NFLX&interval=1min&outputsize=1&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
     data = response.text.split("\n")  # split the text by line
@@ -76,8 +76,7 @@ def FetchNFLXStock():
     NFLXstock.low_price=values[3]
     NFLXstock.close_price=values[4]
     NFLXstock.volume=values[5]
-def FetchGOOGStock():
-    tdapi_key=os.getenv('twelvedataAPI_KEY')
+def FetchGOOGStock(tdapi_key):
     url='https://api.twelvedata.com/time_series?symbol=GOOG&interval=1min&outputsize=1&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
     data = response.text.split("\n")  # split the text by line
@@ -88,12 +87,11 @@ def FetchGOOGStock():
     GOOGstock.close_price=values[4]
     GOOGstock.volume=values[5]
 def FetchEconomicIndicators():
-    
-    api_key=os.getenv('api_key')
+    api_key=os.environ.get('API_KEY')
     country = 'United States'
     
     url = 'https://api.api-ninjas.com/v1/inflation?country={}'.format(country)
-    r = requests.get(url, headers={'X-Api-Key': os.getenv('ninjaAPI_KEY')})
+    r = requests.get(url, headers={'X-Api-Key': os.environ.get('NINJAAPI_KEY')})
     EconomicIndicators.inflation = json.loads(r.text)[0]['yearly_rate_pct']
     
     url = 'https://www.alphavantage.co/query?function=FEDERAL_FUNDS_RATE&interval=daily&datatype=csv&apikey='+api_key
@@ -102,61 +100,63 @@ def FetchEconomicIndicators():
     EconomicIndicators.interest_rate = lines[1].split(',')[1]
     
     url = 'https://api.api-ninjas.com/v1/convertcurrency?want=GBP&have=USD&amount=1'
-    r = requests.get(url, headers={'X-Api-Key': os.getenv('ninjaAPI_KEY')})
-    EconomicIndicators.exchange_rate = json.loads(r.text)[0]['new_amount']
+    r = requests.get(url, headers={'X-Api-Key': os.environ.get('NINJAAPI_KEY')})
+    EconomicIndicators.currency = json.loads(r.text)['new_amount']
 def Predictstock(Stock):
     # load model
     if Stock==METAstock:
-        model=keras.load_model('META\METAmodel')
-        new_input = np.array(Stock.high_price,
-                             Stock.low_price,
-                             Stock.open_price,
-                             EconomicIndicators.interest_rate,
-                             EconomicIndicators.exchange_rate,
-                             EconomicIndicators.inflation,
-                             datetime.date.today().strftime("%d"),
-                             datetime.date.today().strftime("%m"))
+        model=keras.models.load_model(r'META/METAmodel')
+        new_input = np.array([float(Stock.high_price),
+                             float(Stock.low_price),
+                             float(Stock.open_price),
+                             float(EconomicIndicators.interest_rate),
+                             float(EconomicIndicators.currency),
+                             float(EconomicIndicators.inflation),
+                             int(datetime.date.today().strftime("%d")),
+                             int(datetime.date.today().strftime("%m"))])
     elif Stock==AAPLstock:
-        model=keras.load_model('APPLE\AAPLmodel')
-        new_input = np.array(Stock.high_price,
-                                Stock.low_price,
-                                Stock.open_price,
-                                EconomicIndicators.interest_rate,
-                                EconomicIndicators.exchange_rate,
-                                EconomicIndicators.inflation,
-                                datetime.date.today().strftime("%m"),
-                                datetime.date.today().strftime("%d"))
+        model=keras.models.load_model(r'APPLE/AAPLmodel')
+        new_input = np.array([float(Stock.high_price),
+                                float(Stock.low_price),
+                                float(Stock.open_price),
+                                float(EconomicIndicators.interest_rate),
+                                float(EconomicIndicators.currency),
+                                float(EconomicIndicators.inflation),
+                                int(datetime.date.today().strftime("%m")),
+                                int(datetime.date.today().strftime("%d"))])
     elif Stock==AMZNstock:
-        model=keras.load_model('AMAZON\AMZNmodel')
-        new_input = np.array(Stock.high_price,
-                                Stock.low_price,
-                                Stock.open_price,
-                                EconomicIndicators.interest_rate,
-                                EconomicIndicators.exchange_rate,
-                                EconomicIndicators.inflation,
-                                datetime.date.today().strftime("%d"),
-                                datetime.date.today().strftime("%m"))       
+        model=keras.models.load_model(r'AMAZON/AMZNmodel')
+        new_input = np.array([float(Stock.high_price),
+                                float(Stock.low_price),
+                                float(Stock.open_price),
+                                float(EconomicIndicators.interest_rate),
+                                float(EconomicIndicators.currency),
+                                float(EconomicIndicators.inflation),
+                                int(datetime.date.today().strftime("%d")),
+                                int(datetime.date.today().strftime("%m"))])
     elif Stock==NFLXstock:
-        model=keras.load_model('NETFLIX/NFLXmodel')
-        new_input = np.array(Stock.open_price,
-                                Stock.high_price,
-                                Stock.low_price,
-                                EconomicIndicators.interest_rate,
-                                EconomicIndicators.exchange_rate,
-                                EconomicIndicators.inflation,
-                                datetime.date.today().strftime("%d"),
-                                datetime.date.today().strftime("%m"))
+        model=keras.models.load_model(r'NETFLIX/NFLXmodel')
+        new_input = np.array([float(Stock.open_price),
+                                float(Stock.high_price),
+                                float(Stock.low_price),
+                                float(EconomicIndicators.interest_rate),
+                                float(EconomicIndicators.currency),
+                                float(EconomicIndicators.inflation),
+                                int(datetime.date.today().strftime("%d")),
+                                int(datetime.date.today().strftime("%m"))])
     elif Stock==GOOGstock:
-        model=keras.load_model('GOOGLE\GOOGmodel')
-        new_input = np.array(Stock.open_price,
-                                Stock.high_price,
-                                Stock.low_price,
-                                EconomicIndicators.interest_rate,
-                                EconomicIndicators.exchange_rate,
-                                EconomicIndicators.inflation,
-                                datetime.date.today().strftime("%d"),
-                                datetime.date.today().strftime("%m"))
+        model=keras.models.load_model(r'GOOGLE/GOOGmodel')
+        new_input = np.array([float(Stock.open_price),
+                                float(Stock.high_price),
+                                float(Stock.low_price),
+                                float(EconomicIndicators.interest_rate),
+                                float(EconomicIndicators.currency),
+                                float(EconomicIndicators.inflation),
+                                int(datetime.date.today().strftime("%d")),
+                                int(datetime.date.today().strftime("%m"))])
     
     # make prediction
+    new_input=new_input.round(2).astype(np.float64)
+    new_input=new_input.reshape(1,8)
     Stock.prediction = model.predict(new_input)
     return Stock.prediction

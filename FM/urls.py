@@ -18,5 +18,5 @@ from django.contrib import admin
 from django.urls import path
 from FinanceMetrics import views
 urlpatterns = [
-    path('', views.DisplayStocks.as_view(), name='display_stocks')
+    path('', views.DisplayStock, name='display_stocks')
 ]

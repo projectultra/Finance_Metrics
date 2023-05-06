@@ -13,7 +13,20 @@ class METAstock(models.Model):
     close_price=models.FloatField()
     predicted_price=models.FloatField()
     volume=models.IntegerField()
-
+class MSFTstock(models.Model):
+    open_price=models.FloatField()
+    high_price=models.FloatField()
+    low_price=models.FloatField()
+    close_price=models.FloatField()
+    predicted_price=models.FloatField()
+    volume=models.IntegerField()
+class TSLAstock(models.Model):
+    open_price=models.FloatField()
+    high_price=models.FloatField()
+    low_price=models.FloatField()
+    close_price=models.FloatField()
+    predicted_price=models.FloatField()
+    volume=models.IntegerField()
 class AAPLstock(models.Model):
     open_price=models.FloatField()
     high_price=models.FloatField()

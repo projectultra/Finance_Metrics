@@ -1,17 +1,24 @@
-# Use a base image suitable for your application
-FROM python:3.8.10
+# Base image
+FROM python:3.8
 
-# Set the working directory inside the container
-WORKDIR /workspaces/Finance_Metrics/FinanceMetrics1
-COPY requirements.txt .
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-RUN /bin/bash -c pip install -r requirements.txt
-# Copy the application files to the working directory
-COPY . /workspaces/Finance_Metrics/FinanceMetrics1
+# Set the working directory in the container
+WORKDIR /app
 
-# Specify the command to run your application
+# Copy the project files to the working directory
+COPY . /app/
+
+# Install dependencies
+RUN pip install -r requirements.txt
+
+# Install gunicorn
+RUN pip install gunicorn
+
+# Expose the port on which the Django app will run
 EXPOSE 8000
 
-# Specify the command to start your application using Gunicorn
-CMD [ "python", "manage.py","runserver" ]
-#CMD ["gunicorn", "--bind", "0.0.0.0:8000", "FM.wsgi:application"]
+# Set the startup command
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "FM.wsgi:application"]

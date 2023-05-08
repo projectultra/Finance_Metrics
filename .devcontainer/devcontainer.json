@@ -1,0 +1,5 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/universal:2",
+    "features": {"ghcr.io/customink/codespaces-features/docker-log-level:1": {}
+    }
+  }

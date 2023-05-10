@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'FinanceMetrics'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_64D939DCFE704187BA84F40C4951BB76 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_19344CFA9CF64AFCBDB299FC865C5E08 }}

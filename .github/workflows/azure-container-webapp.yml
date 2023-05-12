@@ -30,7 +30,7 @@ jobs:
 
       - name: Lowercase the repo name and username
         run: |
-          echo "REPO=${{ github.repository_owner }}/${{ github.repository_name }}" >> $GITHUB_ENV
+          echo "REPO=projectultra/finance_metrics" >> $GITHUB_ENV
 
       - name: Build and push container image to registry
         uses: docker/build-push-action@v2
@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: Lowercase the repo name and username
         run: |
-          echo "REPO=${{ github.repository_owner }}/${{ github.repository_name }}" >> $GITHUB_ENV
+          echo "REPO=projectultra/finance_metrics" >> $GITHUB_ENV
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp

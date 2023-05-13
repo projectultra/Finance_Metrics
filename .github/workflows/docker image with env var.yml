@@ -32,4 +32,4 @@ jobs:
             --build-arg API_KEY=$API_KEY_1 \
             --build-arg NINJAAPI_KEY=$API_KEY_2 \
             --build-arg TWELVEDATAAPI_KEY=$API_KEY_3 .
-          docker push $DOCKERHUB_USERNAME/financemetrics:${{ github.sha }}
+          docker push -t $DOCKERHUB_USERNAME/financemetrics:${{ github.sha }}

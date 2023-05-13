@@ -23,13 +23,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build and Push Docker Image
-        env:
-          API_KEY_1: ${{ secrets.API_KEY }}
-          API_KEY_2: ${{ secrets.NINJAAPI_KEY }}
-          API_KEY_3: ${{ secrets.TWELVEDATAAPI_KEY }}
         run: |
-          docker build --build-arg API_KEY=$API_KEY_1 \
-            --build-arg NINJAAPI_KEY=$API_KEY_2 \
-            --build-arg TWELVEDATAAPI_KEY=$API_KEY_3 .
-            --tag ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} .
+          docker build --t ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} .
+          docker exec -e API_KEY=${{ secrets.API_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} env
+          docker exec -e NINJAAPI_KEY=${{ secrets.NINJAAPI_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} env
+          docker exec -e TWELVEDATAAPI_KEY=${{ secrets.TWELVEDATAAPI_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} env
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }}

@@ -25,7 +25,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} .
-          docker exec -e API_KEY=${{ secrets.API_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} env
-          docker exec -e NINJAAPI_KEY=${{ secrets.NINJAAPI_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} env
-          docker exec -e TWELVEDATAAPI_KEY=${{ secrets.TWELVEDATAAPI_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} env
+          docker run -e API_KEY=${{ secrets.API_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} env
+          docker run -e NINJAAPI_KEY=${{ secrets.NINJAAPI_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} env
+          docker run -e TWELVEDATAAPI_KEY=${{ secrets.TWELVEDATAAPI_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }} env
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/financemetrics:${{ github.sha }}

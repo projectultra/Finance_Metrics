@@ -27,10 +27,7 @@ jobs:
     - name: Run Tests
       run: |
         python manage.py test
-  build-and-push:
-    runs-on: ubuntu-latest
-
-    steps:
+        
       - name: Checkout Repository
         uses: actions/checkout@v2
 

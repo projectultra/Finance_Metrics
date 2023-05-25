@@ -22,7 +22,6 @@ django.setup()
 # Create your views here.
 
 prevdate=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['LastDate']
-DisplayStock()
 def DisplayStock():
     tdapi_key=os.environ.get('TWELVEDATAAPI_KEY')
     if((datetime.datetime.date(datetime.datetime.today()))!=(pd.to_datetime(prevdate).dt.date[0])):
@@ -155,6 +154,7 @@ def conversion(response):
         ]
         data_rows.append(row)
     return(np.array(data_rows))
+DisplayStock()
 print('Apple:',pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Apple'][0],
       'Amazon',pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Amazon'][0],
       'Meta',pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Meta'][0],

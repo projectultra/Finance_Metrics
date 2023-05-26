@@ -26,7 +26,8 @@ SECRET_KEY = get_random_secret_key()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['financemetrics.azurewebsites.net']
+ALLOWED_HOSTS = ['financemetrics.azurewebsites.net',
+                 'financemetrics.onrender.com']
 
 
 # Application definition

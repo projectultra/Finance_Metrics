@@ -2,42 +2,82 @@
 <html>
 <head>
 	<title>Stock Predictions</title>
+	<style>
+		.container {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.section {
+			width: 30%;
+			margin-bottom: 40px;
+			padding: 20px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+		}
+
+		.section h2 {
+			margin-top: 0;
+		}
+
+		.section table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		.section th, .section td {
+			padding: 10px;
+			border: 1px solid #ccc;
+		}
+	</style>
 </head>
 <body>
-	<h1>Stock Predictions for May 2023</h1>
-	<table>
-		<tr>
-			<th>Stock</th>
-			<th>Prediction</th>
-		</tr>
-		<tr>
-			<td>Meta</td>
-			<td>{{METAstock}}</td>
-		</tr>
-		<tr>
-			<td>Apple</td>
-			<td>{{AAPLstock}}</td>
-		</tr>
-		<tr>
-			<td>Amazon</td>
-			<td>{{AMZNstock}}</td>
-		</tr>
-		<tr>
-			<td>Netflix</td>
-			<td>{{NFLXstock}}</td>
-		</tr>
-		<tr>
-			<td>Google</td>
-			<td>{{GOOGstock}}</td>
-		</tr>
-		<tr>
-			<td>Tesla</td>
-			<td>{{TSLAstock}}</td>
-		</tr>
-		<tr>
-			<td>Microsoft</td>
-			<td>{{MSFTstock}}</td>
-		</tr>
-	</table>
+	<div class="container">
+		<div class="section">
+			<h2>Stock Predictions for May 2023</h2>
+			<table>
+				<tr>
+					<th>Stock</th>
+					<th>Prediction</th>
+				</tr>
+				<tr>
+					<td>Meta</td>
+					<td>{{METAstock}}</td>
+				</tr>
+				<tr>
+					<td>Apple</td>
+					<td>{{AAPLstock}}</td>
+				</tr>
+				<tr>
+					<td>Amazon</td>
+					<td>{{AMZNstock}}</td>
+				</tr>
+				<tr>
+					<td>Netflix</td>
+					<td>{{NFLXstock}}</td>
+				</tr>
+				<tr>
+					<td>Google</td>
+					<td>{{GOOGstock}}</td>
+				</tr>
+				<tr>
+						<td>Tesla</td>
+						<td>{{TSLAstock}}</td>
+				</tr>
+				<tr>
+						<td>Microsoft</td>
+						<td>{{MSFTstock}}</td>
+				</tr>
+			</table>
+		</div>
+		<div class="section">
+			<h2>Live Stocks and Commodities</h2>
+			<!-- Add your live stocks and commodities here -->
+		</div>
+		<div class="section">
+			<h2>Latest News</h2>
+			<!-- Add your news articles here -->
+		</div>
+	</div>
 </body>
 </html>

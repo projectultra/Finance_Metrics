@@ -27,7 +27,7 @@ SECRET_KEY = get_random_secret_key()
 DEBUG = True
 
 ALLOWED_HOSTS = ['financemetrics.azurewebsites.net',
-                 'financemetrics.onrender.com']
+                 '127.0.0.1']
 
 
 # Application definition

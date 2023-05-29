@@ -12,21 +12,39 @@
   <section id="prediction-section">
     <h2>Stock Prediction</h2>
     <div id="prediction-container">
-      <!-- Placeholder for stock prediction data -->
+      {% for prediction in predictions %}
+        <div class="prediction-item">
+          <p>{{ prediction.date }}</p>
+          <p>{{ prediction.symbol }}</p>
+          <p>{{ prediction.prediction }}</p>
+        </div>
+      {% endfor %}
     </div>
   </section>
   
   <section id="live-stocks-section">
     <h2>Live Stocks and Commodities</h2>
     <div id="live-stocks-container">
-      <!-- Placeholder for live stocks and commodities data -->
+      {% for stock in live_stocks %}
+        <div class="stock-item">
+          <p>{{ stock.symbol }}</p>
+          <p>{{ stock.price }}</p>
+          <p>{{ stock.volume }}</p>
+        </div>
+      {% endfor %}
     </div>
   </section>
   
   <section id="news-section">
     <h2>Latest News</h2>
     <div id="news-container">
-      <!-- Placeholder for news articles -->
+      {% for article in news_articles %}
+        <div class="article-item">
+          <h3>{{ article.title }}</h3>
+          <p>{{ article.date }}</p>
+          <p>{{ article.content }}</p>
+        </div>
+      {% endfor %}
     </div>
   </section>
   

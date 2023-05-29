@@ -31,9 +31,14 @@ def DisplayStock(request):
         FetchGOOGStock(tdapi_key)
         FetchTSLAStock(tdapi_key)
         FetchMSFTStock(tdapi_key)
+        
         storeprices(datetime.datetime.today())
     else:
         fetchprices()
+    #enterfromhere
+    
+    
+    #end beforehere
     context = {'METAstock': float(METAstock.predicted_price),
                    'AAPLstock': float(AAPLstock.predicted_price),
                    'AMZNstock': float(AMZNstock.predicted_price),

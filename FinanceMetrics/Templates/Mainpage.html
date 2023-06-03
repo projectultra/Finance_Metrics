@@ -1,83 +1,208 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Stock Predictions</title>
+	<title>Finance Metrics</title>
 	<style>
 		.container {
-			display: flex;
-			justify-content: space-between;
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 20px;
 		}
 
 		.section {
-			width: 30%;
 			margin-bottom: 40px;
+		}
+
+		.stock-box {
+			background-color: #ffffff;
+			border: 1px solid #000000;
 			padding: 20px;
-			border: 1px solid #ccc;
-			border-radius: 5px;
+			margin-bottom: 20px;
+			text-align: center;
 		}
 
-		.section h2 {
-			margin-top: 0;
+		.stock-box h3 {
+			font-size: 18px;
+			margin-bottom: 10px;
 		}
 
-		.section table {
-			width: 100%;
-			border-collapse: collapse;
+		.stock-box p {
+			font-size: 14px;
+			margin-bottom: 5px;
 		}
 
-		.section th, .section td {
-			padding: 10px;
-			border: 1px solid #ccc;
+		.news-container {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-gap: 20px;
+		}
+
+		.news-item {
+			background-color: #ffffff;
+			border: 1px solid #000000;
+			padding: 20px;
+		}
+
+		.news-item img {
+			max-width: 100%;
+			margin-bottom: 10px;
+		}
+
+		.news-item h4 {
+			font-size: 16px;
+			margin-bottom: 10px;
+		}
+
+		.news-item p {
+			font-size: 14px;
+			margin-bottom: 5px;
+		}
+
+		.commodity-price {
+			background-color: #ffffff;
+			border: 1px solid #000000;
+			padding: 20px;
+			text-align: center;
+		}
+
+		.commodity-price h3 {
+			font-size: 18px;
+			margin-bottom: 10px;
+		}
+
+		.commodity-price p {
+			font-size: 14px;
+			margin-bottom: 5px;
 		}
 	</style>
 </head>
 <body>
 	<div class="container">
-		<div class="section">
-			<h2>Stock Predictions for May 2023</h2>
-			<table>
-				<tr>
-					<th>Stock</th>
-					<th>Prediction</th>
-				</tr>
-				<tr>
-					<td>Meta</td>
-					<td>{{METAstock}}</td>
-				</tr>
-				<tr>
-					<td>Apple</td>
-					<td>{{AAPLstock}}</td>
-				</tr>
-				<tr>
-					<td>Amazon</td>
-					<td>{{AMZNstock}}</td>
-				</tr>
-				<tr>
-					<td>Netflix</td>
-					<td>{{NFLXstock}}</td>
-				</tr>
-				<tr>
-					<td>Google</td>
-					<td>{{GOOGstock}}</td>
-				</tr>
-				<tr>
-						<td>Tesla</td>
-						<td>{{TSLAstock}}</td>
-				</tr>
-				<tr>
-						<td>Microsoft</td>
-						<td>{{MSFTstock}}</td>
-				</tr>
-			</table>
-		</div>
-		<div class="section">
-			<h2>Live Stocks and Commodities</h2>
-			<!-- Add your live stocks and commodities here -->
-		</div>
-		<div class="section">
+		<section class="section">
+			<h2>Stock Data</h2>
+			<div class="stock-box">
+				<h3>APPLE</h3>
+				<p>Open: ${{AAPLstock_data.open_price}}</p>
+				<p>High: ${{AAPLstock_data.high_price}}</p>
+				<p>Low: ${{AAPLstock_data.low_price}}</p>
+				<p>Predicted: ${{AAPLstock_data.prediction}}</p>
+				<p>Volume: ${{AAPLstock_data.volume}}</p>
+				<p>Percentage Change: ${{AAPLstock_data.percent_change}}</p>
+				<p>Previous Close: ${{AAPLstock_data.previous_close}}</p>
+				<p>Price Change: ${{AAPLstock_data.price_change}}</p>
+			</div>
+			<div class="stock-box">
+				<h3>AMAZON</h3>
+				<p>Open: ${{AMZNstock_data.open_price}}</p>
+				<p>High: ${{AMZNstock_data.high_price}}</p>
+				<p>Low: ${{AMZNstock_data.low_price}}</p>
+				<p>Predicted: ${{AMZNstock_data.prediction}}</p>
+				<p>Volume: ${{AMZNstock_data.volume}}</p>
+				<p>Percentage Change: ${{AMZNstock_data.percent_change}}</p>
+				<p>Previous Close: ${{AMZNstock_data.previous_close}}</p>
+				<p>Price Change: ${{AMZNstock_data.price_change}}</p>
+			</div>
+			
+			<div class="stock-box">
+				<h3>NETFLIX</h3>
+				<p>Open: ${{NFLXstock_data.open_price}}</p>
+				<p>High: ${{NFLXstock_data.high_price}}</p>
+				<p>Low: ${{NFLXstock_data.low_price}}</p>
+				<p>Predicted: ${{NFLXstock_data.prediction}}</p>
+				<p>Volume: ${{NFLXstock_data.volume}}</p>
+				<p>Percentage Change: ${{NFLXstock_data.percent_change}}</p>
+				<p>Previous Close: ${{NFLXstock_data.previous_close}}</p>
+				<p>Price Change: ${{NFLXstock_data.price_change}}</p>
+			</div>
+			
+			<div class="stock-box">
+				<h3>TESLA</h3>
+				<p>Open: ${{TSLAstock_data.open_price}}</p>
+				<p>High: ${{TSLAstock_data.high_price}}</p>
+				<p>Low: ${{TSLAstock_data.low_price}}</p>
+				<p>Predicted: ${{TSLAstock_data.prediction}}</p>
+				<p>Volume: ${{TSLAstock_data.volume}}</p>
+				<p>Percentage Change: ${{TSLAstock_data.percent_change}}</p>
+				<p>Previous Close: ${{TSLAstock_data.previous_close}}</p>
+				<p>Price Change: ${{TSLAstock_data.price_change}}</p>
+			</div>
+			
+			<div class="stock-box">
+				<h3>MICROSOFT</h3>
+				<p>Open: ${{MSFTstock_data.open_price}}</p>
+				<p>High: ${{MSFTstock_data.high_price}}</p>
+				<p>Low: ${{MSFTstock_data.low_price}}</p>
+				<p>Predicted: ${{MSFTstock_data.prediction}}</p>
+				<p>Volume: ${{MSFTstock_data.volume}}</p>
+				<p>Percentage Change: ${{MSFTstock_data.percent_change}}</p>
+				<p>Previous Close: ${{MSFTstock_data.previous_close}}</p>
+				<p>Price Change: ${{MSFTstock_data.price_change}}</p>
+			</div>
+			
+			<div class="stock-box">
+				<h3>GOOGLE</h3>
+				<p>Open: ${{GOOGstock_data.open_price}}</p>
+				<p>High: ${{GOOGstock_data.high_price}}</p>
+				<p>Low: ${{GOOGstock_data.low_price}}</p>
+				<p>Predicted: ${{GOOGstock_data.prediction}}</p>
+				<p>Volume: ${{GOOGstock_data.volume}}</p>
+				<p>Percentage Change: ${{GOOGstock_data.percent_change}}</p>
+				<p>Previous Close: ${{GOOGstock_data.previous_close}}</p>
+				<p>Price Change: ${{GOOGstock_data.price_change}}</p>
+			</div>
+			
+			<div class="stock-box">
+				<h3>META</h3>
+				<p>Open: ${{METAstock_data.open_price}}</p>
+				<p>High: ${{METAstock_data.high_price}}</p>
+				<p>Low: ${{METAstock_data.low_price}}</p>
+				<p>Predicted: ${{METAstock_data.prediction}}</p>
+				<p>Volume: ${{METAstock_data.volume}}</p>
+				<p>Percentage Change: ${{METAstock_data.percent_change}}</p>
+				<p>Previous Close: ${{METAstock_data.previous_close}}</p>
+				<p>Price Change: ${{METAstock_data.price_change}}</p>
+			</div>
+			
+		</section>
+
+		<section class="section">
 			<h2>Latest News</h2>
-			<!-- Add your news articles here -->
-		</div>
+			<div class="news-container">
+				<div class="news-item">
+					<img src="banner1.jpg" alt="News Image">
+					<h4>News Title 1</h4>
+					<p>Author: John Doe</p>
+					<p>Source: Example News</p>
+				</div>
+				<div class="news-item">
+					<img src="banner2.jpg" alt="News Image">
+					<h4>News Title 2</h4>
+					<p>Author: Jane Smith</p>
+					<p>Source: Example News</p>
+					<!-- Add more news items here -->
+				</div>
+				<div class="news-item">
+					<img src="banner3.jpg" alt="News Image">
+					<h4>News Title 3</h4>
+					<p>Author: John Smith</p>
+					<p>Source: Example News</p>
+					<!-- Add more news items here -->
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<h2>Commodity Price</h2>
+			<div class="commodity-price">
+				<h3>Gold</h3>
+				<p>Current Price: $1500</p>
+			</div>
+			<div class="commodity-price">
+				<h3>Silver</h3>
+				<p>Current Price: $25</p>
+			</div>
+			<!-- Add more commodity price sections here -->
+		</section>
 	</div>
 </body>
 </html>

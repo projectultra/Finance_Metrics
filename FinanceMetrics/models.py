@@ -134,3 +134,10 @@ class news5(models.Model):
     summary=models.CharField(max_length=1000)
     urlToImage=models.CharField(max_length=1000)
     source=models.CharField(max_length=1000)
+
+class currency(models.Model):
+    EUR=models.FloatField()
+    GBP=models.FloatField()
+    JPY=models.FloatField()
+    CAD=models.FloatField()
+    INR=models.FloatField()

@@ -17,6 +17,7 @@ from FinanceMetrics.models import MSFTstock
 from FinanceMetrics.models import TSLAstock
 from FinanceMetrics.models import commodities
 from FinanceMetrics.models import news1,news2,news3,news4,news5
+from FinanceMetrics.models import currency
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FM.settings')
 django.setup()
 # Create your views here.
@@ -31,10 +32,12 @@ def DisplayStock(request):
         storeprices(datetime.datetime.today())
     else:
         fetchprices()
+    get_currency()
     get_stocks()
+    #get_commodities()
     context=compiledata()
-    context['news']=news1.objects.all()
-    return render(request, 'FinanceMetrics/Templates/Mainpage.html',context)
+    #return render(request,'FinanceMetrics/Templates/Mainpage.html',context)
+    return render(request,'FinanceMetrics/Templates/financemetrics/studies-believe-655625.framer.app/index.html',context)
 
 def Fetchstock(tdapi_key):
     url='https://api.twelvedata.com/time_series?symbol=META&interval=1day&outputsize=7&format=CSV&apikey='+tdapi_key
@@ -184,70 +187,74 @@ def get_stocks():
     AMZNstock.price_change = data['Global Quote']['09. change']
     AMZNstock.percent_change = data['Global Quote']['10. change percent']
 
-    symbol = 'MSFT'  
-    url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={stocks_api_key}'
-    response = requests.get(url)   
-    data = response.json() 
-    MSFTstock.open_price = data['Global Quote']['02. open']
-    MSFTstock.high_price = data['Global Quote']['03. high']
-    MSFTstock.low_price = data['Global Quote']['04. low']
-    MSFTstock.live_price = data['Global Quote']['05. price']
-    MSFTstock.volume = data['Global Quote']['06. volume']
-    MSFTstock.previous_close = data['Global Quote']['08. previous close']
-    MSFTstock.price_change = data['Global Quote']['09. change']
-    MSFTstock.percent_change = data['Global Quote']['10. change percent']
+    endpoint = 'https://finnhub.io/api/v1/quote'
+    params = {'symbol': 'MSFT',
+              'token': stocks2_api_key}
+    response = requests.get(endpoint, params=params)
+    data = response.json()
+    MSFTstock.open_price = data['o']
+    MSFTstock.high_price = data['h']
+    MSFTstock.low_price = data['l']
+    MSFTstock.live_price = data['c']
+    MSFTstock.volume = data['t']
+    MSFTstock.previous_close = data['pc']
+    MSFTstock.percent_change = data['dp']
+    MSFTstock.price_change = data['d']
 
-    symbol = 'META'
-    url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={stocks_api_key}'
-    response = requests.get(url)   
-    data = response.json() 
-    METAstock.open_price = data['Global Quote']['02. open']
-    METAstock.high_price = data['Global Quote']['03. high']
-    METAstock.low_price = data['Global Quote']['04. low']
-    METAstock.live_price = data['Global Quote']['05. price']
-    METAstock.volume = data['Global Quote']['06. volume']
-    METAstock.previous_close = data['Global Quote']['08. previous close']
-    METAstock.price_change = data['Global Quote']['09. change']
-    METAstock.percent_change = data['Global Quote']['10. change percent']
+    params = {'symbol': 'META',
+                'token': stocks2_api_key}
+    response = requests.get(endpoint, params=params)
+    data = response.json()
+    METAstock.open_price = data['o']
+    METAstock.high_price = data['h']
+    METAstock.low_price = data['l']
+    METAstock.live_price = data['c']
+    METAstock.volume = data['t']
+    METAstock.previous_close = data['pc']
+    METAstock.percent_change = data['dp']
+    METAstock.price_change = data['d']
     
-    symbol = 'NFLX'
-    url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={stocks_api_key}'
-    response = requests.get(url)   
-    data = response.json() 
-    NFLXstock.open_price = data['Global Quote']['02. open']
-    NFLXstock.high_price = data['Global Quote']['03. high']
-    NFLXstock.low_price = data['Global Quote']['04. low']
-    NFLXstock.live_price = data['Global Quote']['05. price']
-    NFLXstock.volume = data['Global Quote']['06. volume']
-    NFLXstock.previous_close = data['Global Quote']['08. previous close']
-    NFLXstock.price_change = data['Global Quote']['09. change']
-    NFLXstock.percent_change = data['Global Quote']['10. change percent']
+    params = {'symbol': 'NFLX',
+              'token': stocks2_api_key}
+    response = requests.get(endpoint, params=params)
+    data = response.json()
+    NFLXstock.open_price = data['o']
+    NFLXstock.high_price = data['h']
+    NFLXstock.low_price = data['l']
+    NFLXstock.live_price = data['c']
+    NFLXstock.volume = data['t']
+    NFLXstock.previous_close = data['pc']
+    NFLXstock.percent_change = data['dp']
+    NFLXstock.price_change = data['d']
+    
     
     symbol = 'GOOG'
-    url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={stocks2_api_key}'
-    response = requests.get(url) 
-    data = response.json() 
-    GOOGstock.open_price = data['Global Quote']['02. open']
-    GOOGstock.high_price = data['Global Quote']['03. high']
-    GOOGstock.low_price = data['Global Quote']['04. low']
-    GOOGstock.live_price = data['Global Quote']['05. price']
-    GOOGstock.volume = data['Global Quote']['06. volume']
-    GOOGstock.previous_close = data['Global Quote']['08. previous close']
-    GOOGstock.price_change = data['Global Quote']['09. change']
-    GOOGstock.percent_change = data['Global Quote']['10. change percent']
+    params = {'symbol': 'GOOG',
+                'token': stocks2_api_key}
+    response = requests.get(endpoint, params=params)
+    data = response.json()
+    GOOGstock.open_price = data['o']
+    GOOGstock.high_price = data['h']
+    GOOGstock.low_price = data['l']
+    GOOGstock.live_price = data['c']
+    GOOGstock.volume = data['t']
+    GOOGstock.previous_close = data['pc']
+    GOOGstock.percent_change = data['dp']
+    GOOGstock.price_change = data['d']
     
     symbol = 'TSLA'
-    url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={stocks2_api_key}'
-    response = requests.get(url)   
-    data = response.json() 
-    TSLAstock.open_price = data['Global Quote']['02. open']
-    TSLAstock.high_price = data['Global Quote']['03. high']
-    TSLAstock.low_price = data['Global Quote']['04. low']
-    TSLAstock.live_price = data['Global Quote']['05. price']
-    TSLAstock.volume = data['Global Quote']['06. volume']
-    TSLAstock.previous_close = data['Global Quote']['08. previous close']
-    TSLAstock.price_change = data['Global Quote']['09. change']
-    TSLAstock.percent_change = data['Global Quote']['10. change percent']
+    params = {'symbol': 'TSLA',
+                'token': stocks2_api_key}
+    response = requests.get(endpoint, params=params)
+    data = response.json()
+    TSLAstock.open_price = data['o']
+    TSLAstock.high_price = data['h']
+    TSLAstock.low_price = data['l']
+    TSLAstock.live_price = data['c']
+    TSLAstock.volume = data['t']
+    TSLAstock.previous_close = data['pc']
+    TSLAstock.percent_change = data['dp']
+    TSLAstock.price_change = data['d']
     
 def get_commodities():
     com_api_key=os.environ.get('COMMODITIES_API_KEY')
@@ -364,12 +371,46 @@ def compiledata():
     'price_change':MSFTstock.price_change,
     'previous_close':MSFTstock.previous_close,
     'volume':MSFTstock.volume}
+    livecurrency_data = {
+    'EUR':currency.EUR,
+    'GBP':currency.GBP,
+    'JPY':currency.JPY,
+    'CAD':currency.CAD,
+    'INR':currency.INR}
+    livecommodity_data = {
+    'NATGAS':commodities.natgas,
+    'OIL':commodities.crudeoil,
+    'COPPER':commodities.copper,
+    'WHEAT':commodities.wheat,
+    'ALUMINIUM':commodities.aluminum}
+    news_data = {
+    'title':news1.title,
+    'url':news1.url,
+    'author':news1.author,
+    'summary':news1.summary,
+    'urlToImage':news1.urlToImage,
+    'source':news1.source}
     context = {'AMZNstock_data': AMZNstock_data,
                'AAPLstock_data': AAPLstock_data,
                'METAstock_data': METAstock_data,
                'NFLXstock_data': NFLXstock_data,
                'GOOGstock_data': GOOGstock_data,
                'TSLAstock_data': TSLAstock_data,
-               'MSFTstock_data': MSFTstock_data
-               }
+               'MSFTstock_data': MSFTstock_data,
+               'livecurrency_data': livecurrency_data,
+               'commod': livecommodity_data,
+               'news_data': news_data,}
     return context
+
+def get_currency():
+    API_KEY = os.environ.get('CURRENCY_API_KEY')
+    currencies = ['EUR', 'GBP', 'JPY', 'CAD','INR']
+    request_url = f"https://openexchangerates.org/api/latest.json?app_id={API_KEY}&symbols={','.join(currencies)}"
+    response = requests.get(request_url)
+    data = response.json()
+    rates = data['rates']
+    currency.EUR=rates['EUR']
+    currency.GBP=rates['GBP']
+    currency.JPY=rates['JPY']
+    currency.CAD=rates['CAD']
+    currency.INR=rates['INR']

@@ -162,44 +162,33 @@
 				<p>Previous Close: ${{METAstock_data.previous_close}}</p>
 				<p>Price Change: ${{METAstock_data.price_change}}</p>
 			</div>
-			
+			<div class="currency">
+				<h3>usd</h3>
+					<p>eur: ${{ livecurrency_data.EUR }}</p>
+					<p>gbp: ${{ livecurrency_data.GBP }}</p>
+					<p>cad: ${{ livecurrency_data.CAD }}</p>
+			</div>
 		</section>
 
 		<section class="section">
-			<h2>Latest News</h2>
-			<div class="news-container">
-				<div class="news-item">
-					<img src="banner1.jpg" alt="News Image">
-					<h4>News Title 1</h4>
-					<p>Author: John Doe</p>
-					<p>Source: Example News</p>
-				</div>
-				<div class="news-item">
-					<img src="banner2.jpg" alt="News Image">
-					<h4>News Title 2</h4>
-					<p>Author: Jane Smith</p>
-					<p>Source: Example News</p>
-					<!-- Add more news items here -->
-				</div>
-				<div class="news-item">
-					<img src="banner3.jpg" alt="News Image">
-					<h4>News Title 3</h4>
-					<p>Author: John Smith</p>
-					<p>Source: Example News</p>
-					<!-- Add more news items here -->
-				</div>
+			<h2>News</h2>
+			<div class="news">
+				<h3>{{ news_data.title }}</h3>
+				<p>Author: {{ news_data.author }}</p>
+				<p>Summary: {{ news_data.summary }}</p>
+				<p>Source: {{ news_data.source }}</p>
+				<img src="{{ news_data.urlToImage }}" alt="News Image">
+				<a href="{{ news_data.url }}" target="_blank">Read More</a>
 			</div>
 		</section>
+		
 
 		<section class="section">
 			<h2>Commodity Price</h2>
-			<div class="commodity-price">
-				<h3>Gold</h3>
-				<p>Current Price: $1500</p>
-			</div>
-			<div class="commodity-price">
-				<h3>Silver</h3>
-				<p>Current Price: $25</p>
+			<div class="commod">
+				<h3>commodity</h3>
+					<p>natgas: ${{ commod.NATGAS }}</p>
+					<p>oil: ${{ commod.OIL }}</p>
 			</div>
 			<!-- Add more commodity price sections here -->
 		</section>

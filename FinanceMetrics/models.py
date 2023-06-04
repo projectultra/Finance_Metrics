@@ -90,11 +90,11 @@ class GOOGstock(models.Model):
     previous_close=models.FloatField(null=True,blank=True)
 
 class commodities(models.Model):
-    crudeoil=models.FloatField()
-    natgas=models.FloatField()
-    copper=models.FloatField()
+    oil=models.FloatField()
+    gold=models.FloatField()
+    silver=models.FloatField()
     aluminum=models.FloatField()
-    wheat=models.FloatField()
+    petrol=models.FloatField()
 
 class news1(models.Model):
     title=models.CharField(max_length=1000)

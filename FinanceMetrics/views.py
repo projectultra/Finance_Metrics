@@ -18,6 +18,7 @@ from FinanceMetrics.models import TSLAstock
 from FinanceMetrics.models import commodities
 from FinanceMetrics.models import news1,news2,news3,news4,news5
 from FinanceMetrics.models import currency
+import yfinance as yf
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FM.settings')
 django.setup()
 # Create your views here.
@@ -34,7 +35,7 @@ def DisplayStock(request):
         fetchprices()
     get_currency()
     get_stocks()
-    #get_commodities()
+    get_commodities()
     context=compiledata()
     return render(request,'FinanceMetrics/Templates/index.html',context)
     #return render(request,'FinanceMetrics/Templates/financemetrics/studies-believe-655625.framer.app/index.html',context)
@@ -153,8 +154,7 @@ def conversion(response):
             float(EconomicIndicators.currency),
             float(EconomicIndicators.inflation),
             int(date.day),
-            int(date.month),
-        ]
+            int(date.month),]
         data_rows.append(row)
     return(np.array(data_rows))
 
@@ -227,7 +227,6 @@ def get_stocks():
     NFLXstock.percent_change = data['dp']
     NFLXstock.price_change = data['d']
     
-    
     symbol = 'GOOG'
     params = {'symbol': 'GOOG',
                 'token': stocks2_api_key}
@@ -257,36 +256,20 @@ def get_stocks():
     TSLAstock.price_change = data['d']
     
 def get_commodities():
-    com_api_key=os.environ.get('COMMODITIES_API_KEY')
-    comm = 'COPPER'
-    url = f'https://www.alphavantage.co/query?function={comm}&apikey={com_api_key}&interval=monthly'
-    response = requests.get(url)
-    data = response.json()
-    commodities.copper=data['data'][0]['value']
-
-    comm = 'NATURAL_GAS'
-    url = f'https://www.alphavantage.co/query?function={comm}&apikey={com_api_key}&interval=monthly'
-    response = requests.get(url)
-    data = response.json()
-    commodities.natgas=data['data'][0]['value']
-
-    comm = 'ALUMINUM'
-    url = f'https://www.alphavantage.co/query?function={comm}&apikey={com_api_key}&interval=monthly'
-    response = requests.get(url)
-    data = response.json()
-    commodities.aluminum=data['data'][0]['value']
-
-    comm = 'BRENT' #(oil)
-    url = f'https://www.alphavantage.co/query?function={comm}&apikey={com_api_key}&interval=monthly'
-    response = requests.get(url)
-    data = response.json()
-    commodities.crudeoil=data['data'][0]['value']
-
-    comm = 'WHEAT'
-    url = f'https://www.alphavantage.co/query?function={comm}&apikey={com_api_key}&interval=monthly'
-    response = requests.get(url)
-    data = response.json()
-    commodities.wheat=data['data'][0]['value']
+    commodity_ticker = yf.Ticker("GC=F")
+    commodities.gold = commodity_ticker.history(period="1d")["Close"].iloc[-1]
+    
+    commodity_ticker = yf.Ticker("SI=F")
+    commodities.silver = commodity_ticker.history(period="5d")["Close"].iloc[-1]
+    
+    commodity_ticker = yf.Ticker("ALI=F")
+    commodities.aluminum = commodity_ticker.history(period="5d")["Close"].iloc[-1]
+    
+    commodity_ticker = yf.Ticker("CL=F")
+    commodities.oil = commodity_ticker.history(period="5d")["Close"].iloc[-1]
+    
+    commodity_ticker = yf.Ticker("RB=F")
+    commodities.petrol = commodity_ticker.history(period="5d")["Close"].iloc[-1]
 
 def get_news():
     news_api_key=os.environ.get('NEWS_API_KEY')
@@ -298,7 +281,35 @@ def get_news():
     news1.author = data['feed'][0]['authors']
     news1.summary = data['feed'][0]['summary']
     news1.urlToImage = data['feed'][0]['banner_image']
-    news1.source = data['feed'][0]['source']
+    news1.source = data['feed'][1]['source']
+    
+    news2.title = data['feed'][1]['title']
+    news2.url = data['feed'][1]['url']
+    news2.author = data['feed'][1]['authors']
+    news2.summary = data['feed'][1]['summary']
+    news2.urlToImage = data['feed'][1]['banner_image']
+    news2.source = data['feed'][1]['source']
+    
+    news3.title = data['feed'][2]['title']
+    news3.url = data['feed'][2]['url']
+    news3.author = data['feed'][2]['authors']
+    news3.summary = data['feed'][2]['summary']
+    news3.urlToImage = data['feed'][2]['banner_image']
+    news3.source = data['feed'][2]['source']
+    
+    news4.title = data['feed'][3]['title']
+    news4.url = data['feed'][3]['url']
+    news4.author = data['feed'][3]['authors']
+    news4.summary = data['feed'][3]['summary']
+    news4.urlToImage = data['feed'][3]['banner_image']
+    news4.source = data['feed'][3]['source']
+    
+    news5.title = data['feed'][4]['title']
+    news5.url = data['feed'][4]['url']
+    news5.author = data['feed'][4]['authors']
+    news5.summary = data['feed'][4]['summary']
+    news5.urlToImage = data['feed'][4]['banner_image']
+    news5.source = data['feed'][4]['source']
     
 def compiledata():
     AMZNstock_data = {
@@ -378,18 +389,47 @@ def compiledata():
     'CAD':currency.CAD,
     'INR':currency.INR}
     livecommodity_data = {
-    'NATGAS':commodities.natgas,
-    'OIL':commodities.crudeoil,
-    'COPPER':commodities.copper,
-    'WHEAT':commodities.wheat,
+    'GOLD':commodities.gold,
+    'OIL':commodities.oil,
+    'SILVER':commodities.silver,
+    'PETROL':commodities.petrol,
     'ALUMINIUM':commodities.aluminum}
-    news_data = {
+    news1_data = {
     'title':news1.title,
     'url':news1.url,
     'author':news1.author,
     'summary':news1.summary,
     'urlToImage':news1.urlToImage,
     'source':news1.source}
+    news2_data = {
+    'title':news2.title,
+    'url':news2.url,
+    'author':news2.author,
+    'summary':news2.summary,
+    'urlToImage':news2.urlToImage,
+    'source':news2.source}
+    news3_data = {
+    'title':news3.title,
+    'url':news3.url,
+    'author':news3.author,
+    'summary':news3.summary,
+    'urlToImage':news3.urlToImage,
+    'source':news3.source}
+    news4_data = {
+    'title':news4.title,
+    'url':news4.url,
+    'author':news4.author,
+    'summary':news4.summary,
+    'urlToImage':news4.urlToImage,
+    'source':news4.source}
+    news5_data = {
+    'title':news5.title,
+    'url':news5.url,
+    'author':news5.author,
+    'summary':news5.summary,
+    'urlToImage':news5.urlToImage,
+    'source':news5.source}
+    
     context = {'AMZNstock_data': AMZNstock_data,
                'AAPLstock_data': AAPLstock_data,
                'METAstock_data': METAstock_data,
@@ -399,7 +439,11 @@ def compiledata():
                'MSFTstock_data': MSFTstock_data,
                'livecurrency_data': livecurrency_data,
                'commod': livecommodity_data,
-               'news_data': news_data,}
+               'news1_data': news1_data,
+               'news2_data': news2_data,
+               'news3_data': news3_data,
+               'news4_data': news4_data,
+               'news5_data': news5_data,}
     return context
 
 def get_currency():

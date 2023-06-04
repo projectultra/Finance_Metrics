@@ -3843,7 +3843,7 @@
                 <header class="framer-1i7m9fv">
                   <div class="framer-1ym930v" data-framer-name="title" name="title">
                     <div class="framer-1ye1gn2" data-framer-component-type="RichTextContainer" style="outline: none; display: flex; flex-direction: column; justify-content: flex-start; flex-shrink: 0; opacity: 1; transform: none;">
-                        <h1 class="framer-text" style="--font-selector: R0Y7RE0gU2Fucy03MDA=; --framer-font-family: &quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif; --framer-font-size: 52px; --framer-font-weight: 700; --framer-letter-spacing: -2px; --framer-line-height: 1em; --framer-text-alignment: center; --framer-text-color: rgb(255, 255, 255);">Finance(test)<br class="framer-text"><span class="framer-text" style="--framer-text-color: rgb(127, 94, 255);">Metrics</span></h1>
+                        <h1 class="framer-text" style="--font-selector: R0Y7RE0gU2Fucy03MDA=; --framer-font-family: &quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif; --framer-font-size: 52px; --framer-font-weight: 700; --framer-letter-spacing: -2px; --framer-line-height: 1em; --framer-text-alignment: center; --framer-text-color: rgb(255, 255, 255);">Finance<br class="framer-text"><span class="framer-text" style="--framer-text-color: rgb(127, 94, 255);">Metrics</span></h1>
                      </div>                     
                     <div class="framer-1wqu147" style="outline: none; display: flex; flex-direction: column; justify-content: flex-start; flex-shrink: 0; opacity: 0.8; transform: none;" data-framer-component-type="RichTextContainer">
                       <p style="--font-selector: R0Y7RE0gU2Fucy1yZWd1bGFy; --framer-font-family: &quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif; --framer-font-size: 24px; --framer-letter-spacing: 0px; --framer-line-height: 1.5em; --framer-text-alignment: center; --framer-text-color: var(--token-b120fb4b-0c34-444a-83f7-f5da4652de5f, rgb(232, 227, 253));" class="framer-text">Stock Prediction Using Artificial Intelligence</p>
@@ -3856,13 +3856,15 @@
                           <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:37px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Microsoft</h3>
                         </div>
                         <div class="framer-1n62451" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                          <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:30px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:left;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Live:$</p>
+                          <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:30px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:left;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Live:${{MSFTstock_data.live_price}}</p>
                         </div>
                         <div class="framer-pgmhxu" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                          <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:30px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:left;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Predicted: $</p>
+                          <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:30px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:left;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Predicted: ${{ MSFTstock_data.prediction }}
+                          </p>
                         </div>
                         <div class="framer-re555z" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                          <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:21px;--framer-font-weight:500;--framer-letter-spacing:-0.4px;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Open: $</p>
+                          <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:21px;--framer-font-weight:500;--framer-letter-spacing:-0.4px;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Open: ${{ MSFTstock_data.open_price }}
+                          </p>
                         </div>
                         <div class="framer-1e4uav7" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
                           <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:21px;--framer-font-weight:500;--framer-letter-spacing:-0.4px;--framer-text-color:rgb(255, 255, 255)" class="framer-text"> High: $</p>
@@ -4081,7 +4083,7 @@
                     </div>
                     <div class="framer-18l50xn">
                       <div class="framer-1qm18ss" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100$</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{commod.OIL}}$</p>
                       </div>
                     </div>
                   </div>
@@ -4093,7 +4095,7 @@
                     </div>
                     <div class="framer-lrb1le">
                       <div class="framer-1mzt2wi" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100$</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{commod.GOLD}}$</p>
                       </div>
                     </div>
                   </div>
@@ -4105,7 +4107,7 @@
                     </div>
                     <div class="framer-m3k2y0">
                       <div class="framer-dl0zxp" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100$</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{commod.SILVER}}$</p>
                       </div>
                     </div>
                   </div>
@@ -4117,7 +4119,7 @@
                     </div>
                     <div class="framer-15c90zi">
                       <div class="framer-1nw55nj" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100$</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{commod.ALUMINIUM}}$</p>
                       </div>
                     </div>
                   </div>
@@ -4129,7 +4131,7 @@
                     </div>
                     <div class="framer-1aljvq7">
                       <div class="framer-1vg9kwu" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100$</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{commod.PETROL}}$</p>
                       </div>
                     </div>
                   </div>
@@ -4146,7 +4148,7 @@
                     </div>
                     <div class="framer-12p3t8p">
                       <div class="framer-1afciiu" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100 € </p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{livecurrency_data.EUR}} € </p>
                       </div>
                     </div>
                   </div>
@@ -4158,7 +4160,7 @@
                     </div>
                     <div class="framer-5vqdgf">
                       <div class="framer-csyd2g" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100 £</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{livecurrency_data.GBP}} £</p>
                       </div>
                     </div>
                   </div>
@@ -4170,7 +4172,7 @@
                     </div>
                     <div class="framer-1kznox1">
                       <div class="framer-kwd04x" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100 ₹</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{livecurrency_data.INR}} ₹</p>
                       </div>
                     </div>
                   </div>
@@ -4182,7 +4184,7 @@
                     </div>
                     <div class="framer-1tqbp6c">
                       <div class="framer-axii1k" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100 C$</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{livecurrency_data.CAD}} C$</p>
                       </div>
                     </div>
                   </div>
@@ -4194,7 +4196,7 @@
                     </div>
                     <div class="framer-8hd7gi">
                       <div class="framer-10jc297" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: 100 ¥&lrm;</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Rate: {{livecurrency_data.JPY}} ¥</p>
                       </div>
                     </div>
                   </div>
@@ -4214,16 +4216,16 @@
                   <div class="framer-1aelnyy" data-border="true" data-framer-name="NEWS TEXT" name="NEWS TEXT" style="opacity: 1; transform: none;">
                     <div class="framer-qon97s" tabindex="0">
                       <div class="framer-1xuozrg" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Title</h3>
+                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news1_data.title}}</h3>
                       </div>
                       <div class="framer-25iira" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Summary:this is a blank summary that will act as a placeholder for the news content to be displayedfsdf sdhfsjdfh sdjfh sdkhf sdkjhfsdj fhsdkfh dsf ksjdfhrgrdgdrgdrg drg</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news1_data.summary}}</p>
                       </div>
                       <div class="framer-xd0cwm" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Author</h3>
+                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news1_data.author}}</h3>
                       </div>
                       <div class="framer-l50dm9" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Source</h3>
+                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news1_data.source}}</h3>
                       </div>
                     </div>
                   </div>
@@ -4238,16 +4240,16 @@
                   <div class="framer-sepuuw" data-border="true" data-framer-name="NEWS TEXT" name="NEWS TEXT" style="opacity: 1; transform: none;">
                     <div class="framer-117ilrb" tabindex="0">
                       <div class="framer-1bucrxq" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Title</h3>
+                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news2_data.title}}</h3>
                       </div>
                       <div class="framer-1wqcv6h" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Summary:this is a blank summary that will act as a placeholder for the news content to be displayedfsdf sdhfsjdfh sdjfh sdkhf sdkjhfsdj fhsdkfh dsf ksjdfh</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news2_data.summary}}</p>
                       </div>
                       <div class="framer-ufujx5" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Author</h3>
+                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news2_data.author}}</h3>
                       </div>
                       <div class="framer-lgfmkf" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Source</h3>
+                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news2_data.source}}</h3>
                       </div>
                     </div>
                   </div>
@@ -4262,10 +4264,10 @@
                   <div class="framer-xam0pt" data-border="true" data-framer-name="NEWS TEXT" name="NEWS TEXT" style="opacity: 1; transform: none;">
                     <div class="framer-14d2osc" tabindex="0">
                       <div class="framer-10kq94j" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Title</h3>
+                        <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news3_data.title}}</h3>
                       </div>
                       <div class="framer-40dh59" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Summary:this is a blank summary that will act as a placeholder for the news content to be displayedfsdf sdhfsjdfh sdjfh sdkhf sdkjhfsdj fhsdkfh dsf ksjdfh</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news3_data.summary}}</p>
                       </div>
                       <div class="framer-1rnx55z" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
                         <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Author</h3>
@@ -4289,7 +4291,7 @@
                         <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Title</h3>
                       </div>
                       <div class="framer-1n3fey9" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Summary:this is a blank summary that will act as a placeholder for the news content to be displayedfsdf sdhfsjdfh sdjfh sdkhf sdkjhfsdj fhsdkfh dsf ksjdfh</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news1_data.summary}}</p>
                       </div>
                       <div class="framer-1qouyzc" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
                         <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Author</h3>
@@ -4313,7 +4315,7 @@
                         <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Title</h3>
                       </div>
                       <div class="framer-1nca84w" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
-                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Summary:this is a blank summary that will act as a placeholder for the news content to be displayedfsdf sdhfsjdfh sdjfh sdkhf sdkjhfsdj fhsdkfh dsf ksjdfh</p>
+                        <p style="--font-selector:R0Y7RE0gU2Fucy01MDA=;--framer-font-family:&quot;DM Sans&quot;, sans-serif;--framer-font-size:40px;--framer-font-weight:500;--framer-letter-spacing:-1px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">{{news1_data.summary}}</p>
                       </div>
                       <div class="framer-nunr5q" style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;transform:none" data-framer-component-type="RichTextContainer">
                         <h3 style="--font-selector:R0Y7RE0gU2Fucy03MDA=;--framer-font-family:&quot;DM Sans&quot;, &quot;DM Sans Placeholder&quot;, sans-serif;--framer-font-size:48px;--framer-font-weight:700;--framer-letter-spacing:-0.8px;--framer-line-height:1em;--framer-text-alignment:center;--framer-text-color:rgb(255, 255, 255)" class="framer-text">Author</h3>

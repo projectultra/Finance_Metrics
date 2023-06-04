@@ -5,20 +5,12 @@ import keras
 import pandas as pd
 import numpy as np
 import requests
+import yfinance as yf
 import django
 from django.shortcuts import render
-from FinanceMetrics.models import EconomicIndicators
-from FinanceMetrics.models import METAstock
-from FinanceMetrics.models import AAPLstock
-from FinanceMetrics.models import AMZNstock
-from FinanceMetrics.models import NFLXstock
-from FinanceMetrics.models import GOOGstock
-from FinanceMetrics.models import MSFTstock
-from FinanceMetrics.models import TSLAstock
-from FinanceMetrics.models import commodities
+from FinanceMetrics.models import EconomicIndicators,commodities,currency
+from FinanceMetrics.models import METAstock,AAPLstock,AMZNstock,NFLXstock,GOOGstock,MSFTstock,TSLAstock
 from FinanceMetrics.models import news1,news2,news3,news4,news5
-from FinanceMetrics.models import currency
-import yfinance as yf
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FM.settings')
 django.setup()
 # Create your views here.
@@ -106,20 +98,45 @@ def Predictstock(Stock,data_array):
     return Stock.prediction
 
 def storeprices(lastdate):
-    PredictedStock = pd.DataFrame({'Apple': [float(AAPLstock.predicted_price)],
-                                   'Amazon': [float(AMZNstock.predicted_price)],
-                                   'Meta': [float(METAstock.predicted_price)], 
-                                   'Netflix': [float(NFLXstock.predicted_price)],
-                                   'Google': [float(GOOGstock.predicted_price)],
-                                   'Tesla': [float(TSLAstock.predicted_price)],
-                                   'Microsoft': [float(MSFTstock.predicted_price)],
-                                   'NewsTitle': [news1.title],
-                                   'Newsurl': [news1.url],
-                                   'Newsauthor': [news1.author],
-                                   'Newssummary': [news1.summary],
-                                   'NewsurlToImage': [news1.urlToImage],
-                                   'Newssource': [news1.source],
-                                   'LastDate': [lastdate]})
+    PredictedStock = pd.DataFrame({
+                                    'Apple': [float(AAPLstock.predicted_price)],
+                                    'Amazon': [float(AMZNstock.predicted_price)],
+                                    'Meta': [float(METAstock.predicted_price)], 
+                                    'Netflix': [float(NFLXstock.predicted_price)],
+                                    'Google': [float(GOOGstock.predicted_price)],
+                                    'Tesla': [float(TSLAstock.predicted_price)],
+                                    'Microsoft': [float(MSFTstock.predicted_price)],
+                                    'News1Title': [news1.title],
+                                    'News1url': [news1.url],
+                                    'News1author': [news1.author],
+                                    'News1summary': [news1.summary],
+                                    'News1urlToImage': [news1.urlToImage],
+                                    'News1source': [news1.source],
+                                    'News2Title': [news2.title],
+                                    'News2url': [news2.url],
+                                    'News2author': [news2.author],
+                                    'News2summary': [news2.summary],
+                                    'News2urlToImage': [news2.urlToImage],
+                                    'News2source': [news2.source],
+                                    'News3Title': [news3.title],
+                                    'News3url': [news3.url],
+                                    'News3author': [news3.author],
+                                    'News3summary': [news3.summary],
+                                    'News3urlToImage': [news3.urlToImage],
+                                    'News3source': [news3.source],
+                                    'News4Title': [news4.title],
+                                    'News4url': [news4.url],
+                                    'News4author': [news4.author],
+                                    'News4summary': [news4.summary],
+                                    'News4urlToImage': [news4.urlToImage],
+                                    'News4source': [news4.source],
+                                    'News5Title': [news5.title],
+                                    'News5url': [news5.url],
+                                    'News5author': [news5.author],
+                                    'News5summary': [news5.summary],
+                                    'News5urlToImage': [news5.urlToImage],
+                                    'News5source': [news5.source],
+                                    'LastDate': [lastdate]})
     PredictedStock = pd.concat([PredictedStock], ignore_index=True)
     PredictedStock.to_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv',index=False)
 
@@ -131,12 +148,41 @@ def fetchprices():
     GOOGstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Google'][0]
     TSLAstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Tesla'][0]
     MSFTstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Microsoft'][0]
-    news1.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['NewsTitle'][0]
-    news1.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Newsurl'][0]
-    news1.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Newsauthor'][0]
-    news1.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Newssummary'][0]
-    news1.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['NewsurlToImage'][0]
-    news1.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Newssource'][0]
+    
+    news1.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1Title'][0]
+    news1.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1url'][0]
+    news1.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1author'][0]
+    news1.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1summary'][0]
+    news1.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1urlToImage'][0]
+    news1.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1source'][0]
+    
+    news2.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2Title'][0]
+    news2.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2url'][0]
+    news2.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2author'][0]
+    news2.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2summary'][0]
+    news2.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2urlToImage'][0]
+    news2.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2source'][0]
+    
+    news3.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3Title'][0]
+    news3.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3url'][0]
+    news3.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3author'][0]
+    news3.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3summary'][0]
+    news3.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3urlToImage'][0]
+    news3.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3source'][0]
+    
+    news4.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4Title'][0]
+    news4.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4url'][0]
+    news4.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4author'][0]
+    news4.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4summary'][0]
+    news4.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4urlToImage'][0]
+    news4.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4source'][0]
+    
+    news5.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5Title'][0]
+    news5.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5url'][0]
+    news5.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5author'][0]
+    news5.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5summary'][0]
+    news5.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5urlToImage'][0]
+    news5.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5source'][0]
 
 def conversion(response):
     lines = response.text.split("\n")[1:-1]
@@ -383,17 +429,17 @@ def compiledata():
     'previous_close':MSFTstock.previous_close,
     'volume':MSFTstock.volume}
     livecurrency_data = {
-    'EUR':currency.EUR,
-    'GBP':currency.GBP,
-    'JPY':currency.JPY,
-    'CAD':currency.CAD,
-    'INR':currency.INR}
+    'EUR':round(currency.EUR,2),
+    'GBP':round(currency.GBP,2),
+    'JPY':round(currency.JPY,2),
+    'CAD':round(currency.CAD,2),
+    'INR':round(currency.INR,2)}
     livecommodity_data = {
-    'GOLD':commodities.gold,
-    'OIL':commodities.oil,
-    'SILVER':commodities.silver,
-    'PETROL':commodities.petrol,
-    'ALUMINIUM':commodities.aluminum}
+    'GOLD':round(commodities.gold,2),
+    'OIL':round(commodities.oil,2),
+    'SILVER':round(commodities.silver,2),
+    'PETROL':round(commodities.petrol,2),
+    'ALUMINIUM':round(commodities.aluminum,2)}
     news1_data = {
     'title':news1.title,
     'url':news1.url,

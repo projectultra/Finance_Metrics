@@ -36,8 +36,8 @@ def DisplayStock(request):
     get_stocks()
     #get_commodities()
     context=compiledata()
-    #return render(request,'FinanceMetrics/Templates/Mainpage.html',context)
-    return render(request,'FinanceMetrics/Templates/financemetrics/studies-believe-655625.framer.app/index.html',context)
+    return render(request,'FinanceMetrics/Templates/index.html',context)
+    #return render(request,'FinanceMetrics/Templates/financemetrics/studies-believe-655625.framer.app/index.html',context)
 
 def Fetchstock(tdapi_key):
     url='https://api.twelvedata.com/time_series?symbol=META&interval=1day&outputsize=7&format=CSV&apikey='+tdapi_key

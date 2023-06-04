@@ -257,7 +257,7 @@ def get_stocks():
     
 def get_commodities():
     commodity_ticker = yf.Ticker("GC=F")
-    commodities.gold = commodity_ticker.history(period="1d")["Close"].iloc[-1]
+    commodities.gold = commodity_ticker.history(period="5d")["Close"].iloc[-1]
     
     commodity_ticker = yf.Ticker("SI=F")
     commodities.silver = commodity_ticker.history(period="5d")["Close"].iloc[-1]

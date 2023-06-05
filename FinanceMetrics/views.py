@@ -15,45 +15,45 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FM.settings')
 django.setup()
 # Create your views here.
 
-prevdate=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['LastDate']
+prevdate=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['date']
 def DisplayStock(request):
     tdapi_key=os.environ.get('TWELVEDATAAPI_KEY')
     if((datetime.datetime.date(datetime.datetime.today()))!=(pd.to_datetime(prevdate).dt.date[0])):
         FetchEconomicIndicators()
         Fetchstock(tdapi_key)
         get_news()
+        get_currency()
+        get_stocks()
+        get_commodities()
         storeprices(datetime.datetime.today())
     else:
         fetchprices()
-    get_currency()
-    get_stocks()
-    get_commodities()
     context=compiledata()
     return render(request,'FinanceMetrics/Templates/index.html',context)
-    #return render(request,'FinanceMetrics/Templates/financemetrics/studies-believe-655625.framer.app/index.html',context)
 
 def Fetchstock(tdapi_key):
-    url='https://api.twelvedata.com/time_series?symbol=META&interval=1day&outputsize=7&format=CSV&apikey='+tdapi_key
+    model=keras.models.load_model(r'Stock Data/models')
+    url='https://api.twelvedata.com/time_series?symbol=META&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
-    METAstock.predicted_price=Predictstock(METAstock,conversion(response))
-    url='https://api.twelvedata.com/time_series?symbol=AAPL&interval=1day&outputsize=7&format=CSV&apikey='+tdapi_key
+    METAstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
+    url='https://api.twelvedata.com/time_series?symbol=AAPL&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
-    AAPLstock.predicted_price=Predictstock(AAPLstock,conversion(response))
-    url='https://api.twelvedata.com/time_series?symbol=AMZN&interval=1day&outputsize=7&format=CSV&apikey='+tdapi_key
+    AAPLstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
+    url='https://api.twelvedata.com/time_series?symbol=AMZN&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
-    AMZNstock.predicted_price=Predictstock(AMZNstock,conversion(response))
-    url='https://api.twelvedata.com/time_series?symbol=NFLX&interval=1day&outputsize=7&format=CSV&apikey='+tdapi_key
+    AMZNstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
+    url='https://api.twelvedata.com/time_series?symbol=NFLX&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
-    NFLXstock.predicted_price=Predictstock(NFLXstock,conversion(response))
-    url='https://api.twelvedata.com/time_series?symbol=GOOG&interval=1day&outputsize=7&format=CSV&apikey='+tdapi_key
+    NFLXstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
+    url='https://api.twelvedata.com/time_series?symbol=GOOG&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
-    GOOGstock.predicted_price=Predictstock(GOOGstock,conversion(response))
-    url='https://api.twelvedata.com/time_series?symbol=MSFT&interval=1day&outputsize=7&format=CSV&apikey='+tdapi_key
+    GOOGstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
+    url='https://api.twelvedata.com/time_series?symbol=MSFT&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
-    MSFTstock.predicted_price=Predictstock(MSFTstock,conversion(response))
-    url='https://api.twelvedata.com/time_series?symbol=TSLA&interval=1day&outputsize=7&format=CSV&apikey='+tdapi_key
+    MSFTstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
+    url='https://api.twelvedata.com/time_series?symbol=TSLA&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
-    TSLAstock.predicted_price=Predictstock(TSLAstock,conversion(response))
+    TSLAstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
 
 def FetchEconomicIndicators():
     api_key=os.environ.get('API_KEY')
@@ -72,117 +72,212 @@ def FetchEconomicIndicators():
     r = requests.get(url, headers={'X-Api-Key': os.environ.get('NINJAAPI_KEY')})
     EconomicIndicators.currency = json.loads(r.text)['new_amount']
 
-def Predictstock(Stock,data_array):
-
-    if Stock==METAstock:
-        model=keras.models.load_model(r'Stock Data/META/METAmodel')
-
-    elif Stock==AAPLstock:
-        model=keras.models.load_model(r'Stock Data/APPLE/AAPLmodel')
-
-    elif Stock==AMZNstock:
-        model=keras.models.load_model(r'Stock Data/AMAZON/AMZNmodel')
-
-    elif Stock==NFLXstock:
-        model=keras.models.load_model(r'Stock Data/NETFLIX/NFLXmodel')
-
-    elif Stock==GOOGstock:
-        model=keras.models.load_model(r'Stock Data/GOOGLE/GOOGmodel')
-
-    elif Stock==TSLAstock:
-        model=keras.models.load_model(r'Stock Data/TESLA/TSLAmodel')
-
-    elif Stock==MSFTstock:
-        model=keras.models.load_model(r'Stock Data/MICROSOFT/MSFTmodel')
-    Stock.prediction = model.predict(data_array.reshape(1,7,9))
-    return Stock.prediction
-
 def storeprices(lastdate):
     PredictedStock = pd.DataFrame({
-                                    'Apple': [float(AAPLstock.predicted_price)],
-                                    'Amazon': [float(AMZNstock.predicted_price)],
-                                    'Meta': [float(METAstock.predicted_price)], 
-                                    'Netflix': [float(NFLXstock.predicted_price)],
-                                    'Google': [float(GOOGstock.predicted_price)],
-                                    'Tesla': [float(TSLAstock.predicted_price)],
-                                    'Microsoft': [float(MSFTstock.predicted_price)],
-                                    'News1Title': [news1.title],
-                                    'News1url': [news1.url],
-                                    'News1author': [news1.author],
-                                    'News1summary': [news1.summary],
-                                    'News1urlToImage': [news1.urlToImage],
-                                    'News1source': [news1.source],
-                                    'News2Title': [news2.title],
-                                    'News2url': [news2.url],
-                                    'News2author': [news2.author],
-                                    'News2summary': [news2.summary],
-                                    'News2urlToImage': [news2.urlToImage],
-                                    'News2source': [news2.source],
-                                    'News3Title': [news3.title],
-                                    'News3url': [news3.url],
-                                    'News3author': [news3.author],
-                                    'News3summary': [news3.summary],
-                                    'News3urlToImage': [news3.urlToImage],
-                                    'News3source': [news3.source],
-                                    'News4Title': [news4.title],
-                                    'News4url': [news4.url],
-                                    'News4author': [news4.author],
-                                    'News4summary': [news4.summary],
-                                    'News4urlToImage': [news4.urlToImage],
-                                    'News4source': [news4.source],
-                                    'News5Title': [news5.title],
-                                    'News5url': [news5.url],
-                                    'News5author': [news5.author],
-                                    'News5summary': [news5.summary],
-                                    'News5urlToImage': [news5.urlToImage],
-                                    'News5source': [news5.source],
-                                    'LastDate': [lastdate]})
-    PredictedStock = pd.concat([PredictedStock], ignore_index=True)
-    PredictedStock.to_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv',index=False)
+        'AAPL':[float(AAPLstock.predicted_price),
+                AAPLstock.live_price,
+                AAPLstock.open_price,
+                AAPLstock.high_price,
+                AAPLstock.low_price,
+                AAPLstock.volume,
+                AAPLstock.price_change],
+        'AMZN':[float(AMZNstock.predicted_price),
+                AMZNstock.live_price,
+                AMZNstock.open_price,
+                AMZNstock.high_price,
+                AMZNstock.low_price,
+                AMZNstock.volume,
+                AMZNstock.price_change],
+        'GOOG':[float(GOOGstock.predicted_price),
+                GOOGstock.live_price,
+                GOOGstock.open_price,
+                GOOGstock.high_price,
+                GOOGstock.low_price,
+                GOOGstock.volume,
+                GOOGstock.price_change],
+        'META':[float(METAstock.predicted_price),   
+                METAstock.live_price,
+                METAstock.open_price,
+                METAstock.high_price,
+                METAstock.low_price,
+                METAstock.volume,
+                METAstock.price_change],
+        'MSFT':[float(MSFTstock.predicted_price),
+                MSFTstock.live_price,
+                MSFTstock.open_price,
+                MSFTstock.high_price,
+                MSFTstock.low_price,
+                MSFTstock.volume,
+                MSFTstock.price_change],
+        'NFLX':[float(NFLXstock.predicted_price),
+                NFLXstock.live_price,
+                NFLXstock.open_price,
+                NFLXstock.high_price,
+                NFLXstock.low_price,
+                NFLXstock.volume,
+                NFLXstock.price_change],
+        'TSLA':[float(TSLAstock.predicted_price),
+                TSLAstock.live_price,
+                TSLAstock.open_price,
+                TSLAstock.high_price,
+                TSLAstock.low_price,
+                TSLAstock.volume,
+                TSLAstock.price_change]
+    })
+
+    NewsData = pd.DataFrame({
+        'News1': [news1.title,
+                  news1.url,
+                  news1.author,
+                  news1.summary,
+                  news1.urlToImage,
+                  news1.source],
+        'News2': [news2.title,
+                    news2.url,
+                    news2.author,
+                    news2.summary,
+                    news2.urlToImage,
+                    news2.source],
+        'News3': [news3.title,
+                    news3.url,
+                    news3.author,
+                    news3.summary,
+                    news3.urlToImage,
+                    news3.source],
+        'News4': [news4.title,
+                    news4.url,
+                    news4.author,
+                    news4.summary,
+                    news4.urlToImage,
+                    news4.source],
+        'News5': [news5.title,
+                    news5.url,
+                    news5.author,
+                    news5.summary,
+                    news5.urlToImage,
+                    news5.source],
+        })           
+
+    curr_commod = pd.DataFrame({
+        'currency':[currency.EUR,
+                    currency.GBP,
+                    currency.JPY,
+                    currency.CAD,
+                    currency.INR],
+        'commodities':[  commodities.oil,
+                    commodities.gold,
+                    commodities.silver,
+                    commodities.aluminum,
+                    commodities.petrol],})
+    
+    date = pd.DataFrame({'date':[lastdate]})
+    PredStock = pd.concat([PredictedStock , NewsData, curr_commod,date],axis=1)
+    PredStock.to_csv('FinanceMetrics/LivePrices/PredictedStock.csv', index=False)
 
 def fetchprices():
-    AAPLstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Apple'][0]
-    AMZNstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Amazon'][0]
-    METAstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Meta'][0]
-    NFLXstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Netflix'][0]
-    GOOGstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Google'][0]
-    TSLAstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Tesla'][0]
-    MSFTstock.predicted_price=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['Microsoft'][0]
+    cachedata=pd.read_csv('FinanceMetrics/LivePrices/PredictedStock.csv')
+    AAPLstock.predicted_price=cachedata['AAPL'][0]
+    AAPLstock.live_price=cachedata['AAPL'][1]
+    AAPLstock.open_price=cachedata['AAPL'][2]
+    AAPLstock.high_price=cachedata['AAPL'][3]
+    AAPLstock.low_price=cachedata['AAPL'][4]
+    AAPLstock.volume=cachedata['AAPL'][5]
+    AAPLstock.price_change=cachedata['AAPL'][6]
     
-    news1.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1Title'][0]
-    news1.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1url'][0]
-    news1.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1author'][0]
-    news1.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1summary'][0]
-    news1.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1urlToImage'][0]
-    news1.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News1source'][0]
+    AMZNstock.predicted_price=cachedata['AMZN'][0]
+    AMZNstock.live_price=cachedata['AMZN'][1]
+    AMZNstock.open_price=cachedata['AMZN'][2]
+    AMZNstock.high_price=cachedata['AMZN'][3]
+    AMZNstock.low_price=cachedata['AMZN'][4]
+    AMZNstock.volume=cachedata['AMZN'][5]
+    AMZNstock.price_change=cachedata['AMZN'][6]
     
-    news2.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2Title'][0]
-    news2.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2url'][0]
-    news2.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2author'][0]
-    news2.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2summary'][0]
-    news2.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2urlToImage'][0]
-    news2.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News2source'][0]
+    GOOGstock.predicted_price=cachedata['GOOG'][0]
+    GOOGstock.live_price=cachedata['GOOG'][1]
+    GOOGstock.open_price=cachedata['GOOG'][2]
+    GOOGstock.high_price=cachedata['GOOG'][3]
+    GOOGstock.low_price=cachedata['GOOG'][4]
+    GOOGstock.volume=cachedata['GOOG'][5]
+    GOOGstock.price_change=cachedata['GOOG'][6]
     
-    news3.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3Title'][0]
-    news3.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3url'][0]
-    news3.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3author'][0]
-    news3.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3summary'][0]
-    news3.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3urlToImage'][0]
-    news3.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News3source'][0]
+    METAstock.predicted_price=cachedata['META'][0]
+    METAstock.live_price=cachedata['META'][1]
+    METAstock.open_price=cachedata['META'][2]
+    METAstock.high_price=cachedata['META'][3]
+    METAstock.low_price=cachedata['META'][4]
+    METAstock.volume=cachedata['META'][5]
+    METAstock.price_change=cachedata['META'][6]
     
-    news4.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4Title'][0]
-    news4.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4url'][0]
-    news4.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4author'][0]
-    news4.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4summary'][0]
-    news4.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4urlToImage'][0]
-    news4.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News4source'][0]
+    MSFTstock.predicted_price=cachedata['MSFT'][0]
+    MSFTstock.live_price=cachedata['MSFT'][1]
+    MSFTstock.open_price=cachedata['MSFT'][2]
+    MSFTstock.high_price=cachedata['MSFT'][3]
+    MSFTstock.low_price=cachedata['MSFT'][4]
+    MSFTstock.volume=cachedata['MSFT'][5]
+    MSFTstock.price_change=cachedata['MSFT'][6]
     
-    news5.title=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5Title'][0]
-    news5.url=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5url'][0]
-    news5.author=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5author'][0]
-    news5.summary=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5summary'][0]
-    news5.urlToImage=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5urlToImage'][0]
-    news5.source=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['News5source'][0]
+    NFLXstock.predicted_price=cachedata['NFLX'][0]
+    NFLXstock.live_price=cachedata['NFLX'][1]
+    NFLXstock.open_price=cachedata['NFLX'][2]
+    NFLXstock.high_price=cachedata['NFLX'][3]
+    NFLXstock.low_price=cachedata['NFLX'][4]
+    NFLXstock.volume=cachedata['NFLX'][5]
+    NFLXstock.price_change=cachedata['NFLX'][6]
+    
+    TSLAstock.predicted_price=cachedata['TSLA'][0]
+    TSLAstock.live_price=cachedata['TSLA'][1]
+    TSLAstock.open_price=cachedata['TSLA'][2]
+    TSLAstock.high_price=cachedata['TSLA'][3]
+    TSLAstock.low_price=cachedata['TSLA'][4]
+    TSLAstock.volume=cachedata['TSLA'][5]
+    TSLAstock.price_change=cachedata['TSLA'][6]
+    
+    news1.title=cachedata['News1'][0]
+    news1.url=cachedata['News1'][1]
+    news1.author=cachedata['News1'][2]
+    news1.summary=cachedata['News1'][3]
+    news1.urlToImage=cachedata['News1'][4]
+    news1.source=cachedata['News1'][5]
+    
+    news2.title=cachedata['News2'][0]
+    news2.url=cachedata['News2'][1]
+    news2.author=cachedata['News2'][2]
+    news2.summary=cachedata['News2'][3]
+    news2.urlToImage=cachedata['News2'][4]
+    news2.source=cachedata['News2'][5]
+    
+    news3.title=cachedata['News3'][0]
+    news3.url=cachedata['News3'][1]
+    news3.author=cachedata['News3'][2]
+    news3.summary=cachedata['News3'][3]
+    news3.urlToImage=cachedata['News3'][4]
+    news3.source=cachedata['News3'][5]
+    
+    news4.title=cachedata['News4'][0]
+    news4.url=cachedata['News4'][1]
+    news4.author=cachedata['News4'][2]
+    news4.summary=cachedata['News4'][3]
+    news4.urlToImage=cachedata['News4'][4]
+    news4.source=cachedata['News4'][5]
+    
+    news5.title=cachedata['News5'][0]
+    news5.url=cachedata['News5'][1]
+    news5.author=cachedata['News5'][2]
+    news5.summary=cachedata['News5'][3]
+    news5.urlToImage=cachedata['News5'][4]
+    news5.source=cachedata['News5'][5]
+    
+    currency.EUR=cachedata['currency'][0]
+    currency.GBP=cachedata['currency'][1]
+    currency.JPY=cachedata['currency'][2]
+    currency.CAD=cachedata['currency'][3]
+    currency.INR=cachedata['currency'][4]
+    
+    commodities.oil=cachedata['commodities'][0]
+    commodities.gold=cachedata['commodities'][1]
+    commodities.silver=cachedata['commodities'][2]
+    commodities.aluminum=cachedata['commodities'][3]
+    commodities.petrol=cachedata['commodities'][4]
 
 def conversion(response):
     lines = response.text.split("\n")[1:-1]

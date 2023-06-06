@@ -131,7 +131,6 @@ def storeprices(lastdate):
                 TSLAstock.price_change,
                 TSLAstock.previous_close]
     })
-
     NewsData = pd.DataFrame({
         'News1': [news1.title,
                   news1.url,
@@ -170,7 +169,6 @@ def storeprices(lastdate):
                     news6.urlToImage,
                     news6.source],
         })           
-
     curr_commod = pd.DataFrame({
         'currency':[currency.EUR,
                     currency.GBP,
@@ -286,6 +284,13 @@ def fetchprices():
     news5.summary=cachedata['News5'][3]
     news5.urlToImage=cachedata['News5'][4]
     news5.source=cachedata['News5'][5]
+    
+    news6.title=cachedata['News6'][0]
+    news6.url=cachedata['News6'][1]
+    news6.author=cachedata['News6'][2]
+    news6.summary=cachedata['News6'][3]
+    news6.urlToImage=cachedata['News6'][4]
+    news6.source=cachedata['News6'][5]
     
     currency.EUR=cachedata['currency'][0]
     currency.GBP=cachedata['currency'][1]

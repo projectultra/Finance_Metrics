@@ -10,7 +10,7 @@ import django
 from django.shortcuts import render
 from FinanceMetrics.models import EconomicIndicators,commodities,currency
 from FinanceMetrics.models import METAstock,AAPLstock,AMZNstock,NFLXstock,GOOGstock,MSFTstock,TSLAstock
-from FinanceMetrics.models import news1,news2,news3,news4,news5
+from FinanceMetrics.models import news1,news2,news3,news4,news5,news6
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FM.settings')
 django.setup()
 # Create your views here.
@@ -79,50 +79,57 @@ def storeprices(lastdate):
                 AAPLstock.open_price,
                 AAPLstock.high_price,
                 AAPLstock.low_price,
-                AAPLstock.volume,
-                AAPLstock.price_change],
+                int(AAPLstock.volume),
+                AAPLstock.price_change,
+                AAPLstock.previous_close],
         'AMZN':[float(AMZNstock.predicted_price),
                 AMZNstock.live_price,
                 AMZNstock.open_price,
                 AMZNstock.high_price,
                 AMZNstock.low_price,
-                AMZNstock.volume,
-                AMZNstock.price_change],
+                int(AMZNstock.volume),
+                AMZNstock.price_change,
+                AMZNstock.previous_close],
         'GOOG':[float(GOOGstock.predicted_price),
                 GOOGstock.live_price,
                 GOOGstock.open_price,
                 GOOGstock.high_price,
                 GOOGstock.low_price,
-                GOOGstock.volume,
-                GOOGstock.price_change],
+                int(GOOGstock.volume),
+                GOOGstock.price_change,
+                GOOGstock.previous_close],
         'META':[float(METAstock.predicted_price),   
                 METAstock.live_price,
                 METAstock.open_price,
                 METAstock.high_price,
                 METAstock.low_price,
-                METAstock.volume,
-                METAstock.price_change],
+                int(METAstock.volume),
+                METAstock.price_change,
+                METAstock.previous_close],
         'MSFT':[float(MSFTstock.predicted_price),
                 MSFTstock.live_price,
                 MSFTstock.open_price,
                 MSFTstock.high_price,
                 MSFTstock.low_price,
-                MSFTstock.volume,
-                MSFTstock.price_change],
+                int(MSFTstock.volume),
+                MSFTstock.price_change,
+                MSFTstock.previous_close],
         'NFLX':[float(NFLXstock.predicted_price),
                 NFLXstock.live_price,
                 NFLXstock.open_price,
                 NFLXstock.high_price,
                 NFLXstock.low_price,
-                NFLXstock.volume,
-                NFLXstock.price_change],
+                int(NFLXstock.volume),
+                NFLXstock.price_change,
+                NFLXstock.previous_close],
         'TSLA':[float(TSLAstock.predicted_price),
                 TSLAstock.live_price,
                 TSLAstock.open_price,
                 TSLAstock.high_price,
                 TSLAstock.low_price,
-                TSLAstock.volume,
-                TSLAstock.price_change]
+                int(TSLAstock.volume),
+                TSLAstock.price_change,
+                TSLAstock.previous_close]
     })
 
     NewsData = pd.DataFrame({
@@ -156,6 +163,12 @@ def storeprices(lastdate):
                     news5.summary,
                     news5.urlToImage,
                     news5.source],
+        'News6': [news6.title,
+                    news6.url,
+                    news6.author,
+                    news6.summary,
+                    news6.urlToImage,
+                    news6.source],
         })           
 
     curr_commod = pd.DataFrame({
@@ -183,6 +196,7 @@ def fetchprices():
     AAPLstock.low_price=cachedata['AAPL'][4]
     AAPLstock.volume=cachedata['AAPL'][5]
     AAPLstock.price_change=cachedata['AAPL'][6]
+    AAPLstock.previous_close=cachedata['AAPL'][7]
     
     AMZNstock.predicted_price=cachedata['AMZN'][0]
     AMZNstock.live_price=cachedata['AMZN'][1]
@@ -191,6 +205,7 @@ def fetchprices():
     AMZNstock.low_price=cachedata['AMZN'][4]
     AMZNstock.volume=cachedata['AMZN'][5]
     AMZNstock.price_change=cachedata['AMZN'][6]
+    AMZNstock.previous_close=cachedata['AMZN'][7]
     
     GOOGstock.predicted_price=cachedata['GOOG'][0]
     GOOGstock.live_price=cachedata['GOOG'][1]
@@ -199,6 +214,7 @@ def fetchprices():
     GOOGstock.low_price=cachedata['GOOG'][4]
     GOOGstock.volume=cachedata['GOOG'][5]
     GOOGstock.price_change=cachedata['GOOG'][6]
+    GOOGstock.previous_close=cachedata['GOOG'][7]
     
     METAstock.predicted_price=cachedata['META'][0]
     METAstock.live_price=cachedata['META'][1]
@@ -207,6 +223,7 @@ def fetchprices():
     METAstock.low_price=cachedata['META'][4]
     METAstock.volume=cachedata['META'][5]
     METAstock.price_change=cachedata['META'][6]
+    METAstock.previous_close=cachedata['META'][7]
     
     MSFTstock.predicted_price=cachedata['MSFT'][0]
     MSFTstock.live_price=cachedata['MSFT'][1]
@@ -215,6 +232,7 @@ def fetchprices():
     MSFTstock.low_price=cachedata['MSFT'][4]
     MSFTstock.volume=cachedata['MSFT'][5]
     MSFTstock.price_change=cachedata['MSFT'][6]
+    MSFTstock.previous_close=cachedata['MSFT'][7]
     
     NFLXstock.predicted_price=cachedata['NFLX'][0]
     NFLXstock.live_price=cachedata['NFLX'][1]
@@ -223,6 +241,7 @@ def fetchprices():
     NFLXstock.low_price=cachedata['NFLX'][4]
     NFLXstock.volume=cachedata['NFLX'][5]
     NFLXstock.price_change=cachedata['NFLX'][6]
+    NFLXstock.previous_close=cachedata['NFLX'][7]
     
     TSLAstock.predicted_price=cachedata['TSLA'][0]
     TSLAstock.live_price=cachedata['TSLA'][1]
@@ -231,6 +250,7 @@ def fetchprices():
     TSLAstock.low_price=cachedata['TSLA'][4]
     TSLAstock.volume=cachedata['TSLA'][5]
     TSLAstock.price_change=cachedata['TSLA'][6]
+    TSLAstock.previous_close=cachedata['TSLA'][7]
     
     news1.title=cachedata['News1'][0]
     news1.url=cachedata['News1'][1]
@@ -310,7 +330,7 @@ def get_stocks():
     AAPLstock.high_price = data['Global Quote']['03. high']
     AAPLstock.low_price = data['Global Quote']['04. low']
     AAPLstock.live_price = data['Global Quote']['05. price']
-    AAPLstock.volume = data['Global Quote']['06. volume']
+    AAPLstock.volume = int(data['Global Quote']['06. volume'])
     AAPLstock.previous_close = data['Global Quote']['08. previous close']
     AAPLstock.price_change = data['Global Quote']['09. change']
     AAPLstock.percent_change = data['Global Quote']['10. change percent']
@@ -323,7 +343,7 @@ def get_stocks():
     AMZNstock.high_price = data['Global Quote']['03. high']
     AMZNstock.low_price = data['Global Quote']['04. low']
     AMZNstock.live_price = data['Global Quote']['05. price']
-    AMZNstock.volume = data['Global Quote']['06. volume']
+    AMZNstock.volume = int(data['Global Quote']['06. volume'])
     AMZNstock.previous_close = data['Global Quote']['08. previous close']
     AMZNstock.price_change = data['Global Quote']['09. change']
     AMZNstock.percent_change = data['Global Quote']['10. change percent']
@@ -337,7 +357,7 @@ def get_stocks():
     MSFTstock.high_price = data['h']
     MSFTstock.low_price = data['l']
     MSFTstock.live_price = data['c']
-    MSFTstock.volume = data['t']
+    MSFTstock.volume = int(data['t'])
     MSFTstock.previous_close = data['pc']
     MSFTstock.percent_change = data['dp']
     MSFTstock.price_change = data['d']
@@ -350,7 +370,7 @@ def get_stocks():
     METAstock.high_price = data['h']
     METAstock.low_price = data['l']
     METAstock.live_price = data['c']
-    METAstock.volume = data['t']
+    METAstock.volume = int(data['t'])
     METAstock.previous_close = data['pc']
     METAstock.percent_change = data['dp']
     METAstock.price_change = data['d']
@@ -363,7 +383,7 @@ def get_stocks():
     NFLXstock.high_price = data['h']
     NFLXstock.low_price = data['l']
     NFLXstock.live_price = data['c']
-    NFLXstock.volume = data['t']
+    NFLXstock.volume = int(data['t'])
     NFLXstock.previous_close = data['pc']
     NFLXstock.percent_change = data['dp']
     NFLXstock.price_change = data['d']
@@ -377,7 +397,7 @@ def get_stocks():
     GOOGstock.high_price = data['h']
     GOOGstock.low_price = data['l']
     GOOGstock.live_price = data['c']
-    GOOGstock.volume = data['t']
+    GOOGstock.volume = int(data['t'])
     GOOGstock.previous_close = data['pc']
     GOOGstock.percent_change = data['dp']
     GOOGstock.price_change = data['d']
@@ -391,7 +411,7 @@ def get_stocks():
     TSLAstock.high_price = data['h']
     TSLAstock.low_price = data['l']
     TSLAstock.live_price = data['c']
-    TSLAstock.volume = data['t']
+    TSLAstock.volume = int(data['t'])
     TSLAstock.previous_close = data['pc']
     TSLAstock.percent_change = data['dp']
     TSLAstock.price_change = data['d']
@@ -452,9 +472,16 @@ def get_news():
     news5.urlToImage = data['feed'][4]['banner_image']
     news5.source = data['feed'][4]['source']
     
+    news6.title = data['feed'][5]['title']
+    news6.url = data['feed'][5]['url']
+    news6.author = data['feed'][5]['authors']
+    news6.summary = data['feed'][5]['summary']
+    news6.urlToImage = data['feed'][5]['banner_image']
+    news6.source = data['feed'][5]['source']
+    
 def compiledata():
     AMZNstock_data = {
-    'prediction':AMZNstock.predicted_price,
+    'prediction':round(float(AMZNstock.predicted_price),2),
     'live_price':AMZNstock.live_price,
     'open_price':AMZNstock.open_price,
     'high_price':AMZNstock.high_price,
@@ -464,7 +491,7 @@ def compiledata():
     'previous_close':AMZNstock.previous_close,
     'volume':AMZNstock.volume}
     AAPLstock_data = {
-    'prediction':AAPLstock.predicted_price,
+    'prediction':round(float(AAPLstock.predicted_price),2),
     'live_price':AAPLstock.live_price,
     'open_price':AAPLstock.open_price,
     'high_price':AAPLstock.high_price,
@@ -474,7 +501,7 @@ def compiledata():
     'previous_close':AAPLstock.previous_close,
     'volume':AAPLstock.volume}
     METAstock_data = {
-    'prediction':METAstock.predicted_price,
+    'prediction':round(float(METAstock.predicted_price),2),
     'live_price':METAstock.live_price,
     'open_price':METAstock.open_price,
     'high_price':METAstock.high_price,
@@ -484,7 +511,7 @@ def compiledata():
     'previous_close':METAstock.previous_close,
     'volume':METAstock.volume}
     NFLXstock_data = {
-    'prediction':NFLXstock.predicted_price,
+    'prediction':round(float(NFLXstock.predicted_price),2),
     'live_price':NFLXstock.live_price,
     'open_price':NFLXstock.open_price,
     'high_price':NFLXstock.high_price,
@@ -494,7 +521,7 @@ def compiledata():
     'previous_close':NFLXstock.previous_close,
     'volume':NFLXstock.volume}
     GOOGstock_data = {
-    'prediction':GOOGstock.predicted_price,
+    'prediction':round(float(GOOGstock.predicted_price),2),
     'live_price':GOOGstock.live_price,
     'open_price':GOOGstock.open_price,
     'high_price':GOOGstock.high_price,
@@ -504,7 +531,7 @@ def compiledata():
     'previous_close':GOOGstock.previous_close,
     'volume':GOOGstock.volume}
     TSLAstock_data = {
-    'prediction':TSLAstock.predicted_price,
+    'prediction':round(float(TSLAstock.predicted_price),2),
     'live_price':TSLAstock.live_price,
     'open_price':TSLAstock.open_price,
     'high_price':TSLAstock.high_price,
@@ -514,7 +541,7 @@ def compiledata():
     'previous_close':TSLAstock.previous_close,
     'volume':TSLAstock.volume}
     MSFTstock_data = {
-    'prediction':MSFTstock.predicted_price,
+    'prediction':round(float(MSFTstock.predicted_price),2),
     'live_price':MSFTstock.live_price,
     'open_price':MSFTstock.open_price,
     'high_price':MSFTstock.high_price,
@@ -570,6 +597,13 @@ def compiledata():
     'summary':news5.summary,
     'urlToImage':news5.urlToImage,
     'source':news5.source}
+    news6_data = {
+        'title':news6.title,
+        'url':news6.url,
+        'author':news6.author,
+        'summary':news6.summary,
+        'urlToImage':news6.urlToImage,
+        'source':news6.source}
     
     context = {'AMZNstock_data': AMZNstock_data,
                'AAPLstock_data': AAPLstock_data,
@@ -584,7 +618,8 @@ def compiledata():
                'news2_data': news2_data,
                'news3_data': news3_data,
                'news4_data': news4_data,
-               'news5_data': news5_data,}
+               'news5_data': news5_data,
+               'news6_data': news6_data,}
     return context
 
 def get_currency():

@@ -135,6 +135,14 @@ class news5(models.Model):
     urlToImage=models.CharField(max_length=1000)
     source=models.CharField(max_length=1000)
 
+class news6(models.Model):
+    title=models.CharField(max_length=1000)
+    url=models.CharField(max_length=1000)
+    author=models.CharField(max_length=1000)
+    summary=models.CharField(max_length=1000)
+    urlToImage=models.CharField(max_length=1000)
+    source=models.CharField(max_length=1000)
+
 class currency(models.Model):
     EUR=models.FloatField()
     GBP=models.FloatField()

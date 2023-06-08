@@ -19,22 +19,24 @@ prevdate=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['date']
 def DisplayStock(request):
     tdapi_key=os.environ.get('TWELVEDATAAPI_KEY')
     if((datetime.datetime.date(datetime.datetime.today()))!=(pd.to_datetime(prevdate).dt.date[0])):
-        FetchEconomicIndicators()
-        Fetchstock(tdapi_key)
-        get_news()
-        get_currency()
-        get_stocks()
-        get_commodities()
-        storeprices(datetime.datetime.today())
+        FetchEconomicIndicators() #Fetches Economic Indicators
+        Fetchstock(tdapi_key) #Fetches Stock Prices for Neural Network Model for prediction
+        get_news() #Fetches News
+        get_currency() #Fetches Currency
+        get_stocks() #Fetches live Stock Prices
+        get_commodities() #Fetches Commodities
+        storeprices(datetime.datetime.today()) #Stores Prices in CSV as cache
     else:
-        fetchprices()
-    context=compiledata()
+        fetchprices() #Fetches Prices from CSV
+    context=compiledata() #Compiles Data for Display
     return render(request,'FinanceMetrics/Templates/index.html',context)
 
 def Fetchstock(tdapi_key):
-    model=keras.models.load_model(r'Stock Data/models')
+    model=keras.models.load_model(r'Stock Data/models') #Loads Neural Network Model
     url='https://api.twelvedata.com/time_series?symbol=META&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
+    
+    #Predicts Prices for next day
     METAstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
     url='https://api.twelvedata.com/time_series?symbol=AAPL&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
     response = requests.get(url)
@@ -73,6 +75,7 @@ def FetchEconomicIndicators():
     EconomicIndicators.currency = json.loads(r.text)['new_amount']
 
 def storeprices(lastdate):
+    #Creates Dataframe for storing Prices
     PredictedStock = pd.DataFrame({
         'AAPL':[float(AAPLstock.predicted_price),
                 AAPLstock.live_price,
@@ -131,6 +134,7 @@ def storeprices(lastdate):
                 TSLAstock.price_change,
                 TSLAstock.previous_close]
     })
+    #Creates Dataframe for storing News
     NewsData = pd.DataFrame({
         'News1': [news1.title,
                   news1.url,
@@ -168,7 +172,8 @@ def storeprices(lastdate):
                     news6.summary,
                     news6.urlToImage,
                     news6.source],
-        })           
+        })     
+    #Creates Dataframe for storing Commodities      
     curr_commod = pd.DataFrame({
         'currency':[currency.EUR,
                     currency.GBP,
@@ -182,11 +187,22 @@ def storeprices(lastdate):
                     commodities.petrol],})
     
     date = pd.DataFrame({'date':[lastdate]})
+    #Combines all Dataframes into one
     PredStock = pd.concat([PredictedStock , NewsData, curr_commod,date],axis=1)
+    
+    #output statments for logging/debugging
+    print(PredictedStock['AAPL'],PredictedStock['AMZN'],PredictedStock['GOOG'],PredictedStock['META'],PredictedStock['MSFT'],PredictedStock['NFLX'],PredictedStock['TSLA'])
+    print(NewsData['News1'],NewsData['News2'],NewsData['News3'],NewsData['News4'],NewsData['News5'],NewsData['News6'])
+    print(curr_commod)
+    print(date)
+    
+    #Saves Dataframe to CSV
     PredStock.to_csv('FinanceMetrics/LivePrices/PredictedStock.csv', index=False)
 
 def fetchprices():
+    #Fetches Dataframe from CSV
     cachedata=pd.read_csv('FinanceMetrics/LivePrices/PredictedStock.csv')
+    #Assigns Dataframe values to Stock Objects
     AAPLstock.predicted_price=cachedata['AAPL'][0]
     AAPLstock.live_price=cachedata['AAPL'][1]
     AAPLstock.open_price=cachedata['AAPL'][2]
@@ -249,7 +265,7 @@ def fetchprices():
     TSLAstock.volume=cachedata['TSLA'][5]
     TSLAstock.price_change=cachedata['TSLA'][6]
     TSLAstock.previous_close=cachedata['TSLA'][7]
-    
+    #Assigns Dataframe values to News Objects
     news1.title=cachedata['News1'][0]
     news1.url=cachedata['News1'][1]
     news1.author=cachedata['News1'][2]
@@ -291,22 +307,33 @@ def fetchprices():
     news6.summary=cachedata['News6'][3]
     news6.urlToImage=cachedata['News6'][4]
     news6.source=cachedata['News6'][5]
-    
+    #Assigns Dataframe values to Currency Objects
     currency.EUR=cachedata['currency'][0]
     currency.GBP=cachedata['currency'][1]
     currency.JPY=cachedata['currency'][2]
     currency.CAD=cachedata['currency'][3]
     currency.INR=cachedata['currency'][4]
-    
+    #Assigns Dataframe values to Commodity Objects
     commodities.oil=cachedata['commodities'][0]
     commodities.gold=cachedata['commodities'][1]
     commodities.silver=cachedata['commodities'][2]
     commodities.aluminum=cachedata['commodities'][3]
     commodities.petrol=cachedata['commodities'][4]
-
+    
+    #output statments for logging/debugging
+    print("Cached Data Loaded")
+    print(cachedata['AAPL'],cachedata['MSFT'],cachedata['NFLX'],cachedata['TSLA'],cachedata['META'],cachedata['GOOG'],cachedata['AMZN'])
+    print(cachedata['News1'],cachedata['News2'],cachedata['News3'],cachedata['News4'],cachedata['News5'],cachedata['News6'])
+    print(cachedata['currency'])
+    print(cachedata['commodities'])
+    print(cachedata['date'])
+    
+#converts the response from the API to feed into neural network
 def conversion(response):
+    #splits response into lines
     lines = response.text.split("\n")[1:-1]
     data_rows = []
+    #Creates sliding window of 14 days
     for line in lines:
         values = line.split(";")
         date_string = values[0]
@@ -322,7 +349,9 @@ def conversion(response):
             int(date.day),
             int(date.month),]
         data_rows.append(row)
+    #returns 14x9 dataframe for input to neural network
     return(np.array(data_rows))
+
 
 def get_stocks():
     stocks_api_key=os.environ.get('STOCKS_API_KEY')
@@ -331,6 +360,7 @@ def get_stocks():
     url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={stocks_api_key}'
     response = requests.get(url)   
     data = response.json() 
+    #loads data into stock object
     AAPLstock.open_price = data['Global Quote']['02. open']
     AAPLstock.high_price = data['Global Quote']['03. high']
     AAPLstock.low_price = data['Global Quote']['04. low']
@@ -422,6 +452,7 @@ def get_stocks():
     TSLAstock.price_change = data['d']
     
 def get_commodities():
+    #loads data into commodities object
     commodity_ticker = yf.Ticker("GC=F")
     commodities.gold = commodity_ticker.history(period="5d")["Close"].iloc[-1]
     
@@ -438,6 +469,7 @@ def get_commodities():
     commodities.petrol = commodity_ticker.history(period="5d")["Close"].iloc[-1]
 
 def get_news():
+    #loads data into news object
     news_api_key=os.environ.get('NEWS_API_KEY')
     url = f'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&apikey={news_api_key}&topics=finance'
     response = requests.get(url)
@@ -484,7 +516,21 @@ def get_news():
     news6.urlToImage = data['feed'][5]['banner_image']
     news6.source = data['feed'][5]['source']
     
+def get_currency():
+    API_KEY = os.environ.get('CURRENCY_API_KEY')
+    currencies = ['EUR', 'GBP', 'JPY', 'CAD','INR']
+    request_url = f"https://openexchangerates.org/api/latest.json?app_id={API_KEY}&symbols={','.join(currencies)}"
+    response = requests.get(request_url)
+    data = response.json()
+    rates = data['rates']
+    currency.EUR=rates['EUR']
+    currency.GBP=rates['GBP']
+    currency.JPY=rates['JPY']
+    currency.CAD=rates['CAD']
+    currency.INR=rates['INR']
+
 def compiledata():
+    #compiles data into a dictionary
     AMZNstock_data = {
     'prediction':round(float(AMZNstock.predicted_price),2),
     'live_price':AMZNstock.live_price,
@@ -610,6 +656,7 @@ def compiledata():
         'urlToImage':news6.urlToImage,
         'source':news6.source}
     
+    #creates a dictionary of all the data to be passed to the html page
     context = {'AMZNstock_data': AMZNstock_data,
                'AAPLstock_data': AAPLstock_data,
                'METAstock_data': METAstock_data,
@@ -626,16 +673,3 @@ def compiledata():
                'news5_data': news5_data,
                'news6_data': news6_data,}
     return context
-
-def get_currency():
-    API_KEY = os.environ.get('CURRENCY_API_KEY')
-    currencies = ['EUR', 'GBP', 'JPY', 'CAD','INR']
-    request_url = f"https://openexchangerates.org/api/latest.json?app_id={API_KEY}&symbols={','.join(currencies)}"
-    response = requests.get(request_url)
-    data = response.json()
-    rates = data['rates']
-    currency.EUR=rates['EUR']
-    currency.GBP=rates['GBP']
-    currency.JPY=rates['JPY']
-    currency.CAD=rates['CAD']
-    currency.INR=rates['INR']

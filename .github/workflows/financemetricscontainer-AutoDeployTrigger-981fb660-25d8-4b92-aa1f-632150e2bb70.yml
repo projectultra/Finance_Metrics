@@ -30,12 +30,12 @@ jobs:
         uses: azure/container-apps-deploy-action@v1
         with:
           appSourcePath: ${{ github.workspace }} 
-          registryUrl: hub.docker.com
+          registryUrl: docker.io
           registryUsername: ${{ secrets.FINANCEMETRICSCONTAINER_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.FINANCEMETRICSCONTAINER_REGISTRY_PASSWORD }}
           containerAppName: financemetricscontainer
           resourceGroup: DefaultResourceGroup-EUS
-          imageToBuild: hub.docker.com/jonasferrao/financemetrics:${{ github.sha }}
+          imageToBuild: docker.io/jonasferrao/financemetrics:${{ github.sha }}
           
 
      

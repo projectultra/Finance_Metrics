@@ -31,8 +31,8 @@ jobs:
         with:
           appSourcePath: ${{ github.workspace }} 
           registryUrl: docker.io
-          registryUsername: ${{ secrets.FINANCEMETRICSCONTAINER_REGISTRY_USERNAME }}
-          registryPassword: ${{ secrets.FINANCEMETRICSCONTAINER_REGISTRY_PASSWORD }}
+          registryUsername: ${{ secrets.DOCKERHUB_USERNAME }}
+          registryPassword: ${{ secrets.DOCKERHUB_PASSWORD }}
           containerAppName: financemetricscontainer
           resourceGroup: DefaultResourceGroup-EUS
           imageToBuild: docker.io/jonasferrao/financemetrics:${{ github.sha }}

@@ -1,150 +1,149 @@
-from django.db import models
 # Create your models here.
-class EconomicIndicators(models.Model):
-    inflation=models.FloatField()
-    currency=models.FloatField()
-    interest_rate=models.FloatField()
-class METAstock(models.Model):
-    predicted_price=models.FloatField()
-    live_price = models.FloatField(null=True, blank=True)
-    percent_change = models.FloatField(null=True, blank=True)
-    open_price=models.FloatField(null=True,blank=True)
-    close_price=models.FloatField(null=True,blank=True)
-    high_price=models.FloatField(null=True,blank=True)
-    low_price=models.FloatField(null=True,blank=True)
-    volume=models.BigIntegerField(null=True,blank=True)
-    price_change=models.FloatField(null=True,blank=True)
-    previous_close=models.FloatField(null=True,blank=True)
+class EconomicIndicators():
+    inflation=0.0
+    currency=0.0
+    interest_rate=0.0
+class METAstock():
+    predicted_price=0.0
+    live_price = 0.0
+    percent_change = 0.0
+    open_price=0.0
+    close_price=0.0
+    high_price=0.0
+    low_price=0.0
+    volume=0
+    price_change=0.0
+    previous_close=0.0
 
-class MSFTstock(models.Model):
-    predicted_price=models.FloatField()
-    live_price = models.FloatField(null=True, blank=True)
-    percent_change = models.FloatField(null=True, blank=True)
-    open_price=models.FloatField(null=True,blank=True)
-    close_price=models.FloatField(null=True,blank=True)
-    high_price=models.FloatField(null=True,blank=True)
-    low_price=models.FloatField(null=True,blank=True)
-    volume=models.BigIntegerField(null=True,blank=True)
-    price_change=models.FloatField(null=True,blank=True)
-    previous_close=models.FloatField(null=True,blank=True)
+class MSFTstock():
+    predicted_price=0.0
+    live_price = 0.0
+    percent_change = 0.0
+    open_price=0.0
+    close_price=0.0
+    high_price=0.0
+    low_price=0.0
+    volume=0
+    price_change=0.0
+    previous_close=0.0
 
-class TSLAstock(models.Model):
-    predicted_price=models.FloatField()
-    live_price = models.FloatField(null=True, blank=True)
-    percent_change = models.FloatField(null=True, blank=True)
-    open_price=models.FloatField(null=True,blank=True)
-    close_price=models.FloatField(null=True,blank=True)
-    high_price=models.FloatField(null=True,blank=True)
-    low_price=models.FloatField(null=True,blank=True)
-    volume=models.BigIntegerField(null=True,blank=True)
-    price_change=models.FloatField(null=True,blank=True)
-    previous_close=models.FloatField(null=True,blank=True)
+class TSLAstock():
+    predicted_price=0.0
+    live_price = 0.0
+    percent_change = 0.0
+    open_price=0.0
+    close_price=0.0
+    high_price=0.0
+    low_price=0.0
+    volume=0
+    price_change=0.0
+    previous_close=0.0
 
-class AAPLstock(models.Model):
-    predicted_price=models.FloatField()
-    live_price = models.FloatField(null=True, blank=True)
-    percent_change = models.FloatField(null=True, blank=True)
-    open_price=models.FloatField(null=True,blank=True)
-    close_price=models.FloatField(null=True,blank=True)
-    high_price=models.FloatField(null=True,blank=True)
-    low_price=models.FloatField(null=True,blank=True)
-    volume=models.BigIntegerField(null=True,blank=True)
-    price_change=models.FloatField(null=True,blank=True)
-    previous_close=models.FloatField(null=True,blank=True)
+class AAPLstock():
+    predicted_price=0.0
+    live_price = 0.0
+    percent_change = 0.0
+    open_price=0.0
+    close_price=0.0
+    high_price=0.0
+    low_price=0.0
+    volume=0
+    price_change=0.0
+    previous_close=0.0
 
-class AMZNstock(models.Model):
-    predicted_price=models.FloatField()
-    live_price = models.FloatField(null=True, blank=True)
-    percent_change = models.FloatField(null=True, blank=True)
-    open_price=models.FloatField(null=True,blank=True)
-    close_price=models.FloatField(null=True,blank=True)
-    high_price=models.FloatField(null=True,blank=True)
-    low_price=models.FloatField(null=True,blank=True)
-    volume=models.BigIntegerField(null=True,blank=True)
-    price_change=models.FloatField(null=True,blank=True)
-    previous_close=models.FloatField(null=True,blank=True)
+class AMZNstock():
+    predicted_price=0.0
+    live_price = 0.0
+    percent_change = 0.0
+    open_price=0.0
+    close_price=0.0
+    high_price=0.0
+    low_price=0.0
+    volume=0
+    price_change=0.0
+    previous_close=0.0
 
-class NFLXstock(models.Model):
-    predicted_price=models.FloatField()
-    live_price = models.FloatField(null=True, blank=True)
-    percent_change = models.FloatField(null=True, blank=True)
-    open_price=models.FloatField(null=True,blank=True)
-    close_price=models.FloatField(null=True,blank=True)
-    high_price=models.FloatField(null=True,blank=True)
-    low_price=models.FloatField(null=True,blank=True)
-    volume=models.BigIntegerField(null=True,blank=True)
-    price_change=models.FloatField(null=True,blank=True)
-    previous_close=models.FloatField(null=True,blank=True)
+class NFLXstock():
+    predicted_price=0.0
+    live_price = 0.0
+    percent_change = 0.0
+    open_price=0.0
+    close_price=0.0
+    high_price=0.0
+    low_price=0.0
+    volume=0
+    price_change=0.0
+    previous_close=0.0
 
-class GOOGstock(models.Model):
-    predicted_price=models.FloatField()
-    live_price = models.FloatField(null=True,blank=True)
-    percent_change = models.FloatField(null=True,blank=True)
-    open_price=models.FloatField(null=True,blank=True)
-    close_price=models.FloatField(null=True,blank=True)
-    high_price=models.FloatField(null=True,blank=True)
-    low_price=models.FloatField(null=True,blank=True)
-    volume=models.BigIntegerField(null=True,blank=True)
-    price_change=models.FloatField(null=True,blank=True)
-    previous_close=models.FloatField(null=True,blank=True)
+class GOOGstock():
+    predicted_price=0.0
+    live_price = 0.0
+    percent_change = 0.0
+    open_price=0.0
+    close_price=0.0
+    high_price=0.0
+    low_price=0.0
+    volume=0
+    price_change=0.0
+    previous_close=0.0
 
-class commodities(models.Model):
-    oil=models.FloatField()
-    gold=models.FloatField()
-    silver=models.FloatField()
-    aluminium=models.FloatField()
-    petrol=models.FloatField()
+class commodities():
+    oil=0.0
+    gold=0.0
+    silver=0.0
+    aluminium=0.0
+    petrol=0.0
 
-class news1(models.Model):
-    title=models.CharField(max_length=1000)
-    url=models.CharField(max_length=1000)
-    author=models.CharField(max_length=1000)
-    summary=models.CharField(max_length=1000)
-    urlToImage=models.CharField(max_length=1000)
-    source=models.CharField(max_length=1000)
-class news2(models.Model):
-    title=models.CharField(max_length=1000)
-    url=models.CharField(max_length=1000)
-    author=models.CharField(max_length=1000)
-    summary=models.CharField(max_length=1000)
-    urlToImage=models.CharField(max_length=1000)
-    source=models.CharField(max_length=1000)
+class news1():
+    title=""
+    url=""
+    author=""
+    summary=""
+    urlToImage=""
+    source=""
+class news2():
+    title=""
+    url=""
+    author=""
+    summary=""
+    urlToImage=""
+    source=""
     
-class news3(models.Model):
-    title=models.CharField(max_length=1000)
-    url=models.CharField(max_length=1000)
-    author=models.CharField(max_length=1000)
-    summary=models.CharField(max_length=1000)
-    urlToImage=models.CharField(max_length=1000)
-    source=models.CharField(max_length=1000)
+class news3():
+    title=""
+    url=""
+    author=""
+    summary=""
+    urlToImage=""
+    source=""
     
-class news4(models.Model):
-    title=models.CharField(max_length=1000)
-    url=models.CharField(max_length=1000)
-    author=models.CharField(max_length=1000)
-    summary=models.CharField(max_length=1000)
-    urlToImage=models.CharField(max_length=1000)
-    source=models.CharField(max_length=1000)
+class news4():
+    title=""
+    url=""
+    author=""
+    summary=""
+    urlToImage=""
+    source=""
     
-class news5(models.Model):
-    title=models.CharField(max_length=1000)
-    url=models.CharField(max_length=1000)
-    author=models.CharField(max_length=1000)
-    summary=models.CharField(max_length=1000)
-    urlToImage=models.CharField(max_length=1000)
-    source=models.CharField(max_length=1000)
+class news5():
+    title=""
+    url=""
+    author=""
+    summary=""
+    urlToImage=""
+    source=""
 
-class news6(models.Model):
-    title=models.CharField(max_length=1000)
-    url=models.CharField(max_length=1000)
-    author=models.CharField(max_length=1000)
-    summary=models.CharField(max_length=1000)
-    urlToImage=models.CharField(max_length=1000)
-    source=models.CharField(max_length=1000)
+class news6():
+    title=""
+    url=""
+    author=""
+    summary=""
+    urlToImage=""
+    source=""
 
-class currency(models.Model):
-    EUR=models.FloatField()
-    GBP=models.FloatField()
-    JPY=models.FloatField()
-    CAD=models.FloatField()
-    INR=models.FloatField()
+class currency():
+    EUR=0.0
+    GBP=0.0
+    JPY=0.0
+    CAD=0.0
+    INR=0.0

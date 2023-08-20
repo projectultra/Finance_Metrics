@@ -18,7 +18,6 @@ db = client['FinanceMetrics']
 
 DBDate = pd.DataFrame(list(db['Date'].find()))
 DBDate = DBDate.drop(columns=['_id'])
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FM.settings')
 django.setup()
 # Create your views here.
@@ -26,7 +25,7 @@ django.setup()
 prevdate = DBDate['Date'][0]
 def DisplayStock(request):
     tdapi_key=os.environ.get('TWELVEDATAAPI_KEY')
-    if((datetime.datetime.date(datetime.datetime.today()))!=(pd.to_datetime(prevdate).dt.date[0])):
+    if((datetime.datetime.date(datetime.datetime.today()))!=(pd.to_datetime(prevdate).date())):
         FetchEconomicIndicators() #Fetches Economic Indicators
         Fetchstock(tdapi_key) #Fetches Stock Prices for Neural Network Model for prediction
         get_news() #Fetches News
@@ -209,15 +208,6 @@ def storeprices(lastdate):
     ])
     
     db['Date'].insert_one([{ 'Date': datetime.datetime.now()}])
-    #Combines all Dataframes into one
-    # PredStock = pd.concat([PredictedStock , NewsData, curr_commod,date],axis=1)
-    
-    # #output statments for logging/debugging
-    # print(PredictedStock['AAPL'],PredictedStock['AMZN'],PredictedStock['GOOG'],PredictedStock['META'],PredictedStock['MSFT'],PredictedStock['NFLX'],PredictedStock['TSLA'])
-    # print(NewsData['News1'],NewsData['News2'],NewsData['News3'],NewsData['News4'],NewsData['News5'],NewsData['News6'])
-    # print(curr_commod)
-    # print(date)
-    
 
 def fetchprices():
     #Fetches Dataframe from CSV
@@ -341,18 +331,18 @@ def fetchprices():
     
 
     #Assigns Dataframe values to Currency Objects
-    currency.EUR= Currencydata['EUR']
-    currency.GBP= Currencydata['GBP']
-    currency.JPY= Currencydata['JPY']
-    currency.CAD= Currencydata['CAD']
-    currency.INR= Currencydata['INR']
+    currency.EUR= Currencydata['EUR'][0]
+    currency.GBP= Currencydata['GBP'][0]
+    currency.JPY= Currencydata['JPY'][0]
+    currency.CAD= Currencydata['CAD'][0]
+    currency.INR= Currencydata['INR'][0]
     
     #Assigns Dataframe values to Commodity Objects
-    commodities.oil=Commoditiesdata['Oil']
-    commodities.gold=Commoditiesdata['Gold']
-    commodities.silver=Commoditiesdata['Silver']
-    commodities.aluminium=Commoditiesdata['Aluminium']
-    commodities.petrol=Commoditiesdata['Petrol']
+    commodities.oil=Commoditiesdata['Oil'][0]
+    commodities.gold=Commoditiesdata['Gold'][0]
+    commodities.silver=Commoditiesdata['Silver'][0]
+    commodities.aluminium=Commoditiesdata['Aluminium'][0]
+    commodities.petrol=Commoditiesdata['Petrol'][0]
     
     #output statments for logging/debugging
     print("Cached Data Loaded")

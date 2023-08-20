@@ -13,7 +13,10 @@ from FinanceMetrics.models import EconomicIndicators,commodities,currency
 from FinanceMetrics.models import METAstock,AAPLstock,AMZNstock,NFLXstock,GOOGstock,MSFTstock,TSLAstock
 from FinanceMetrics.models import news1,news2,news3,news4,news5,news6
 
-client=MongoClient('localhost', 27017)
+password=os.environ.get('MONGODBPASSWORD')
+uri = f'mongodb+srv://jonaschris2103:{password}@cluster0.eqnlztp.mongodb.net/?retryWrites=true&w=majority'
+
+client=MongoClient(uri)
 db = client['FinanceMetrics']
 
 DBDate = pd.DataFrame(list(db['Date'].find()))
@@ -22,7 +25,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FM.settings')
 django.setup()
 # Create your views here.
 
-prevdate = DBDate['Date'][0]
+prevdate = DBDate['Date'].iloc[-1]
 def DisplayStock(request):
     tdapi_key=os.environ.get('TWELVEDATAAPI_KEY')
     if((datetime.datetime.date(datetime.datetime.today()))!=(pd.to_datetime(prevdate).date())):
@@ -207,7 +210,7 @@ def storeprices(lastdate):
         }
     ])
     
-    db['Date'].insert_one([{ 'Date': datetime.datetime.now()}])
+    db['Date'].insert_one({ 'Date': datetime.datetime.now()})
 
 def fetchprices():
     #Fetches Dataframe from CSV
@@ -223,126 +226,126 @@ def fetchprices():
     Newsdata = pd.DataFrame(list(db['News'].find()))
     Newsdata = Newsdata.drop(columns=['_id'])
     #Assigns Dataframe values to Stock Objects
-    AAPLstock.predicted_price = Stockdata['Predicted'][0]
-    AAPLstock.live_price = Stockdata['Live'][0]
-    AAPLstock.open_price = Stockdata['Open'][0]
-    AAPLstock.high_price = Stockdata['High'][0]
-    AAPLstock.low_price = Stockdata['Low'][0]
-    AAPLstock.volume = Stockdata['Volume'][0]
-    AAPLstock.price_change = Stockdata['Price Change'][0]
-    AAPLstock.previous_close = Stockdata['Previous Close'][0]
+    AAPLstock.predicted_price = Stockdata['Predicted'].iloc[-7]
+    AAPLstock.live_price = Stockdata['Live'].iloc[-7]
+    AAPLstock.open_price = Stockdata['Open'].iloc[-7]
+    AAPLstock.high_price = Stockdata['High'].iloc[-7]
+    AAPLstock.low_price = Stockdata['Low'].iloc[-7]
+    AAPLstock.volume = Stockdata['Volume'].iloc[-7]
+    AAPLstock.price_change = Stockdata['Price Change'].iloc[-7]
+    AAPLstock.previous_close = Stockdata['Previous Close'].iloc[-7]
 
-    AMZNstock.predicted_price = Stockdata['Predicted'][1]
-    AMZNstock.live_price = Stockdata['Live'][1]
-    AMZNstock.open_price = Stockdata['Open'][1]
-    AMZNstock.high_price = Stockdata['High'][1]
-    AMZNstock.low_price = Stockdata['Low'][1]
-    AMZNstock.volume = Stockdata['Volume'][1]
-    AMZNstock.price_change = Stockdata['Price Change'][1]
-    AMZNstock.previous_close = Stockdata['Previous Close'][1]
+    AMZNstock.predicted_price = Stockdata['Predicted'].iloc[-6]
+    AMZNstock.live_price = Stockdata['Live'].iloc[-6]
+    AMZNstock.open_price = Stockdata['Open'].iloc[-6]
+    AMZNstock.high_price = Stockdata['High'].iloc[-6]
+    AMZNstock.low_price = Stockdata['Low'].iloc[-6]
+    AMZNstock.volume = Stockdata['Volume'].iloc[-6]
+    AMZNstock.price_change = Stockdata['Price Change'].iloc[-6]
+    AMZNstock.previous_close = Stockdata['Previous Close'].iloc[-6]
 
-    GOOGstock.predicted_price = Stockdata['Predicted'][2]
-    GOOGstock.live_price = Stockdata['Live'][2]
-    GOOGstock.open_price = Stockdata['Open'][2]
-    GOOGstock.high_price = Stockdata['High'][2]
-    GOOGstock.low_price = Stockdata['Low'][2]
-    GOOGstock.volume = Stockdata['Volume'][2]
-    GOOGstock.price_change = Stockdata['Price Change'][2]
-    GOOGstock.previous_close = Stockdata['Previous Close'][2]
+    GOOGstock.predicted_price = Stockdata['Predicted'].iloc[-5]
+    GOOGstock.live_price = Stockdata['Live'].iloc[-5]
+    GOOGstock.open_price = Stockdata['Open'].iloc[-5]
+    GOOGstock.high_price = Stockdata['High'].iloc[-5]
+    GOOGstock.low_price = Stockdata['Low'].iloc[-5]
+    GOOGstock.volume = Stockdata['Volume'].iloc[-5]
+    GOOGstock.price_change = Stockdata['Price Change'].iloc[-5]
+    GOOGstock.previous_close = Stockdata['Previous Close'].iloc[-5]
 
-    METAstock.predicted_price = Stockdata['Predicted'][3]
-    METAstock.live_price = Stockdata['Live'][3]
-    METAstock.open_price = Stockdata['Open'][3]
-    METAstock.high_price = Stockdata['High'][3]
-    METAstock.low_price = Stockdata['Low'][3]
-    METAstock.volume = Stockdata['Volume'][3]
-    METAstock.price_change = Stockdata['Price Change'][3]
-    METAstock.previous_close = Stockdata['Previous Close'][3]
+    METAstock.predicted_price = Stockdata['Predicted'].iloc[-4]
+    METAstock.live_price = Stockdata['Live'].iloc[-4]
+    METAstock.open_price = Stockdata['Open'].iloc[-4]
+    METAstock.high_price = Stockdata['High'].iloc[-4]
+    METAstock.low_price = Stockdata['Low'].iloc[-4]
+    METAstock.volume = Stockdata['Volume'].iloc[-4]
+    METAstock.price_change = Stockdata['Price Change'].iloc[-4]
+    METAstock.previous_close = Stockdata['Previous Close'].iloc[-4]
 
-    MSFTstock.predicted_price = Stockdata['Predicted'][4]
-    MSFTstock.live_price = Stockdata['Live'][4]
-    MSFTstock.open_price = Stockdata['Open'][4]
-    MSFTstock.high_price = Stockdata['High'][4]
-    MSFTstock.low_price = Stockdata['Low'][4]
-    MSFTstock.volume = Stockdata['Volume'][4]
-    MSFTstock.price_change = Stockdata['Price Change'][4]
-    MSFTstock.previous_close = Stockdata['Previous Close'][4]
+    MSFTstock.predicted_price = Stockdata['Predicted'].iloc[-3]
+    MSFTstock.live_price = Stockdata['Live'].iloc[-3]
+    MSFTstock.open_price = Stockdata['Open'].iloc[-3]
+    MSFTstock.high_price = Stockdata['High'].iloc[-3]
+    MSFTstock.low_price = Stockdata['Low'].iloc[-3]
+    MSFTstock.volume = Stockdata['Volume'].iloc[-3]
+    MSFTstock.price_change = Stockdata['Price Change'].iloc[-3]
+    MSFTstock.previous_close = Stockdata['Previous Close'].iloc[-3]
+
+    NFLXstock.predicted_price = Stockdata['Predicted'].iloc[-2]
+    NFLXstock.live_price = Stockdata['Live'].iloc[-2]
+    NFLXstock.open_price = Stockdata['Open'].iloc[-2]
+    NFLXstock.high_price = Stockdata['High'].iloc[-2]
+    NFLXstock.low_price = Stockdata['Low'].iloc[-2]
+    NFLXstock.volume = Stockdata['Volume'].iloc[-2]
+    NFLXstock.price_change = Stockdata['Price Change'].iloc[-2]
+    NFLXstock.previous_close = Stockdata['Previous Close'].iloc[-2]
     
-    NFLXstock.predicted_price = Stockdata['Predicted'][5]
-    NFLXstock.live_price = Stockdata['Live'][5]
-    NFLXstock.open_price = Stockdata['Open'][5]
-    NFLXstock.high_price = Stockdata['High'][5]
-    NFLXstock.low_price = Stockdata['Low'][5]
-    NFLXstock.volume = Stockdata['Volume'][5]
-    NFLXstock.price_change = Stockdata['Price Change'][5]
-    NFLXstock.previous_close = Stockdata['Previous Close'][5]
-    
-    TSLAstock.predicted_price = Stockdata['Predicted'][6]
-    TSLAstock.live_price = Stockdata['Live'][6]
-    TSLAstock.open_price = Stockdata['Open'][6]
-    TSLAstock.high_price = Stockdata['High'][6]
-    TSLAstock.low_price = Stockdata['Low'][6]
-    TSLAstock.volume = Stockdata['Volume'][6]
-    TSLAstock.price_change = Stockdata['Price Change'][6]
-    TSLAstock.previous_close = Stockdata['Previous Close'][6]
+    TSLAstock.predicted_price = Stockdata['Predicted'].iloc[-1]
+    TSLAstock.live_price = Stockdata['Live'].iloc[-1]
+    TSLAstock.open_price = Stockdata['Open'].iloc[-1]
+    TSLAstock.high_price = Stockdata['High'].iloc[-1]
+    TSLAstock.low_price = Stockdata['Low'].iloc[-1]
+    TSLAstock.volume = Stockdata['Volume'].iloc[-1]
+    TSLAstock.price_change = Stockdata['Price Change'].iloc[-1]
+    TSLAstock.previous_close = Stockdata['Previous Close'].iloc[-1]
     
     #Assigns Dataframe values to News Objects
-    news1.title=Newsdata['Headline'][0]
-    news1.url=Newsdata['Link'][0]
-    news1.author=Newsdata['Author'][0]
-    news1.summary=Newsdata['Description'][0]
-    news1.urlToImage=Newsdata['Image'][0]
-    news1.source=Newsdata['Source'][0]
+    news1.title=Newsdata['Headline'].iloc[-6]
+    news1.url=Newsdata['Link'].iloc[-6]
+    news1.author=Newsdata['Author'].iloc[-6]
+    news1.summary=Newsdata['Description'].iloc[-6]
+    news1.urlToImage=Newsdata['Image'].iloc[-6]
+    news1.source=Newsdata['Source'].iloc[-6]
     
-    news2.title=Newsdata['Headline'][1]
-    news2.url=Newsdata['Link'][1]
-    news2.author=Newsdata['Author'][1]
-    news2.summary=Newsdata['Description'][1]
-    news2.urlToImage=Newsdata['Image'][1]
-    news2.source=Newsdata['Source'][1]
+    news2.title=Newsdata['Headline'].iloc[-5]
+    news2.url=Newsdata['Link'].iloc[-5]
+    news2.author=Newsdata['Author'].iloc[-5]
+    news2.summary=Newsdata['Description'].iloc[-5]
+    news2.urlToImage=Newsdata['Image'].iloc[-5]
+    news2.source=Newsdata['Source'].iloc[-5]
     
-    news3.title=Newsdata['Headline'][2]
-    news3.url=Newsdata['Link'][2]
-    news3.author=Newsdata['Author'][2]
-    news3.summary=Newsdata['Description'][2]
-    news3.urlToImage=Newsdata['Image'][2]
-    news3.source=Newsdata['Source'][2]
+    news3.title=Newsdata['Headline'].iloc[-4]
+    news3.url=Newsdata['Link'].iloc[-4]
+    news3.author=Newsdata['Author'].iloc[-4]
+    news3.summary=Newsdata['Description'].iloc[-4]
+    news3.urlToImage=Newsdata['Image'].iloc[-4]
+    news3.source=Newsdata['Source'].iloc[-4]
     
-    news4.title=Newsdata['Headline'][3]
-    news4.url=Newsdata['Link'][3]
-    news4.author=Newsdata['Author'][3]
-    news4.summary=Newsdata['Description'][3]
-    news4.urlToImage=Newsdata['Image'][3]
-    news4.source=Newsdata['Source'][3]
+    news4.title=Newsdata['Headline'].iloc[-3]
+    news4.url=Newsdata['Link'].iloc[-3]
+    news4.author=Newsdata['Author'].iloc[-3]
+    news4.summary=Newsdata['Description'].iloc[-3]
+    news4.urlToImage=Newsdata['Image'].iloc[-3]
+    news4.source=Newsdata['Source'].iloc[-3]
     
-    news5.title=Newsdata['Headline'][4]
-    news5.url=Newsdata['Link'][4]
-    news5.author=Newsdata['Author'][4]
-    news5.summary=Newsdata['Description'][4]
-    news5.urlToImage=Newsdata['Image'][4]
-    news5.source=Newsdata['Source'][4]
+    news5.title=Newsdata['Headline'].iloc[-2]
+    news5.url=Newsdata['Link'].iloc[-2]
+    news5.author=Newsdata['Author'].iloc[-2]
+    news5.summary=Newsdata['Description'].iloc[-2]
+    news5.urlToImage=Newsdata['Image'].iloc[-2]
+    news5.source=Newsdata['Source'].iloc[-2]
     
-    news6.title=Newsdata['Headline'][5]
-    news6.url=Newsdata['Link'][5]
-    news6.author=Newsdata['Author'][5]
-    news6.summary=Newsdata['Description'][5]
-    news6.urlToImage=Newsdata['Image'][5]
-    news6.source=Newsdata['Source'][5]
+    news6.title=Newsdata['Headline'].iloc[-1]
+    news6.url=Newsdata['Link'].iloc[-1]
+    news6.author=Newsdata['Author'].iloc[-1]
+    news6.summary=Newsdata['Description'].iloc[-1]
+    news6.urlToImage=Newsdata['Image'].iloc[-1]
+    news6.source=Newsdata['Source'].iloc[-1]
     
 
     #Assigns Dataframe values to Currency Objects
-    currency.EUR= Currencydata['EUR'][0]
-    currency.GBP= Currencydata['GBP'][0]
-    currency.JPY= Currencydata['JPY'][0]
-    currency.CAD= Currencydata['CAD'][0]
-    currency.INR= Currencydata['INR'][0]
+    currency.EUR= Currencydata['EUR'].iloc[-1]
+    currency.GBP= Currencydata['GBP'].iloc[-1]
+    currency.JPY= Currencydata['JPY'].iloc[-1]
+    currency.CAD= Currencydata['CAD'].iloc[-1]
+    currency.INR= Currencydata['INR'].iloc[-1]
     
     #Assigns Dataframe values to Commodity Objects
-    commodities.oil=Commoditiesdata['Oil'][0]
-    commodities.gold=Commoditiesdata['Gold'][0]
-    commodities.silver=Commoditiesdata['Silver'][0]
-    commodities.aluminium=Commoditiesdata['Aluminium'][0]
-    commodities.petrol=Commoditiesdata['Petrol'][0]
+    commodities.oil=Commoditiesdata['Oil'].iloc[-1]
+    commodities.gold=Commoditiesdata['Gold'].iloc[-1]
+    commodities.silver=Commoditiesdata['Silver'].iloc[-1]
+    commodities.aluminium=Commoditiesdata['Aluminium'].iloc[-1]
+    commodities.petrol=Commoditiesdata['Petrol'].iloc[-1]
     
     #output statments for logging/debugging
     print("Cached Data Loaded")

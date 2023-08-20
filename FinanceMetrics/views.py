@@ -7,15 +7,23 @@ import numpy as np
 import requests
 import yfinance as yf
 import django
+from pymongo import MongoClient
 from django.shortcuts import render
 from FinanceMetrics.models import EconomicIndicators,commodities,currency
 from FinanceMetrics.models import METAstock,AAPLstock,AMZNstock,NFLXstock,GOOGstock,MSFTstock,TSLAstock
 from FinanceMetrics.models import news1,news2,news3,news4,news5,news6
+
+client=MongoClient('localhost', 27017)
+db = client['FinanceMetrics']
+
+DBDate = pd.DataFrame(list(db['Date'].find()))
+DBDate = DBDate.drop(columns=['_id'])
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FM.settings')
 django.setup()
 # Create your views here.
 
-prevdate=pd.read_csv(r'FinanceMetrics/LivePrices/PredictedStock.csv')['date']
+prevdate = DBDate['Date'][0]
 def DisplayStock(request):
     tdapi_key=os.environ.get('TWELVEDATAAPI_KEY')
     if((datetime.datetime.date(datetime.datetime.today()))!=(pd.to_datetime(prevdate).dt.date[0])):
@@ -34,27 +42,27 @@ def DisplayStock(request):
 def Fetchstock(tdapi_key):
     model=keras.models.load_model(r'Stock Data/models') #Loads Neural Network Model
     url='https://api.twelvedata.com/time_series?symbol=META&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
-    response = requests.get(url)
-    
+    response = requests.get(url,timeout=10)
+
     #Predicts Prices for next day
     METAstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
     url='https://api.twelvedata.com/time_series?symbol=AAPL&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
-    response = requests.get(url)
+    response = requests.get(url,timeout=10)
     AAPLstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
     url='https://api.twelvedata.com/time_series?symbol=AMZN&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
-    response = requests.get(url)
+    response = requests.get(url,timeout=10)
     AMZNstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
     url='https://api.twelvedata.com/time_series?symbol=NFLX&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
-    response = requests.get(url)
+    response = requests.get(url,timeout=10)
     NFLXstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
     url='https://api.twelvedata.com/time_series?symbol=GOOG&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
-    response = requests.get(url)
+    response = requests.get(url,timeout=10)
     GOOGstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
     url='https://api.twelvedata.com/time_series?symbol=MSFT&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
-    response = requests.get(url)
+    response = requests.get(url,timeout=10)
     MSFTstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
     url='https://api.twelvedata.com/time_series?symbol=TSLA&interval=1day&outputsize=14&format=CSV&apikey='+tdapi_key
-    response = requests.get(url)
+    response = requests.get(url,timeout=10)
     TSLAstock.predicted_price=model.predict(conversion(response).reshape(1,14,9))
 
 def FetchEconomicIndicators():
@@ -62,271 +70,292 @@ def FetchEconomicIndicators():
     country = 'United States'
 
     url = 'https://api.api-ninjas.com/v1/inflation?country={}'.format(country)
-    r = requests.get(url, headers={'X-Api-Key': os.environ.get('NINJAAPI_KEY')})
+    r = requests.get(url,timeout=10, headers={'X-Api-Key': os.environ.get('NINJAAPI_KEY')})
     EconomicIndicators.inflation = json.loads(r.text)[0]['yearly_rate_pct']
 
     url = 'https://www.alphavantage.co/query?function=FEDERAL_FUNDS_RATE&interval=daily&datatype=csv&apikey='+api_key
-    r = requests.get(url)
+    r = requests.get(url,timeout=10)
     lines = r.text.strip().split('\n')
     EconomicIndicators.interest_rate = lines[1].split(',')[1]
 
     url = 'https://api.api-ninjas.com/v1/convertcurrency?want=GBP&have=USD&amount=1'
-    r = requests.get(url, headers={'X-Api-Key': os.environ.get('NINJAAPI_KEY')})
+    r = requests.get(url,timeout=10, headers={'X-Api-Key': os.environ.get('NINJAAPI_KEY')})
     EconomicIndicators.currency = json.loads(r.text)['new_amount']
 
 def storeprices(lastdate):
+    
+    db['Stocks'].insert_many([
+        {   'Stocks':'AAPL',
+            'Predicted':float(AAPLstock.predicted_price),
+            'Live':AAPLstock.live_price,
+            'Open':AAPLstock.open_price,
+            'High':AAPLstock.high_price,
+            'Low':AAPLstock.low_price,
+            'Volume':int(AAPLstock.volume),
+            'Change':AAPLstock.price_change,
+            'Previous':AAPLstock.previous_close,},
+        {   'Stocks':'AMZN',
+            'Predicted':float(AMZNstock.predicted_price),
+            'Live':AMZNstock.live_price,
+            'Open':AMZNstock.open_price,
+            'High':AMZNstock.high_price,
+            'Low':AMZNstock.low_price,
+            'Volume':int(AMZNstock.volume),
+            'Change':AMZNstock.price_change,
+            'Previous':AMZNstock.previous_close,},
+        {   'Stocks':'GOOG',
+            'Predicted':float(GOOGstock.predicted_price),
+            'Live':GOOGstock.live_price,
+            'Open':GOOGstock.open_price,
+            'High':GOOGstock.high_price,
+            'Low':GOOGstock.low_price,
+            'Volume':int(GOOGstock.volume),
+            'Change':GOOGstock.price_change,
+            'Previous':GOOGstock.previous_close,},
+        {
+            'Stocks':'MSFT',
+            'Predicted':float(MSFTstock.predicted_price),
+            'Live':MSFTstock.live_price,
+            'Open':MSFTstock.open_price,
+            'High':MSFTstock.high_price,
+            'Low':MSFTstock.low_price,
+            'Volume':int(MSFTstock.volume),
+            'Change':MSFTstock.price_change,
+            'Previous':MSFTstock.previous_close,},
+        {
+            'Stocks':'NFLX',
+            'Predicted':float(NFLXstock.predicted_price),
+            'Live':NFLXstock.live_price,
+            'Open':NFLXstock.open_price,
+            'High':NFLXstock.high_price,
+            'Low':NFLXstock.low_price,
+            'Volume':int(NFLXstock.volume),
+            'Change':NFLXstock.price_change,
+            'Previous':NFLXstock.previous_close,},
+        {
+            'Stocks':'TSLA',
+            'Predicted':float(TSLAstock.predicted_price),
+            'Live':TSLAstock.live_price,
+            'Open':TSLAstock.open_price,
+            'High':TSLAstock.high_price,
+            'Low':TSLAstock.low_price,
+            'Volume':int(TSLAstock.volume),
+            'Change':TSLAstock.price_change,
+            'Previous':TSLAstock.previous_close,}])
+    
     #Creates Dataframe for storing Prices
-    PredictedStock = pd.DataFrame({
-        'AAPL':[float(AAPLstock.predicted_price),
-                AAPLstock.live_price,
-                AAPLstock.open_price,
-                AAPLstock.high_price,
-                AAPLstock.low_price,
-                int(AAPLstock.volume),
-                AAPLstock.price_change,
-                AAPLstock.previous_close],
-        'AMZN':[float(AMZNstock.predicted_price),
-                AMZNstock.live_price,
-                AMZNstock.open_price,
-                AMZNstock.high_price,
-                AMZNstock.low_price,
-                int(AMZNstock.volume),
-                AMZNstock.price_change,
-                AMZNstock.previous_close],
-        'GOOG':[float(GOOGstock.predicted_price),
-                GOOGstock.live_price,
-                GOOGstock.open_price,
-                GOOGstock.high_price,
-                GOOGstock.low_price,
-                int(GOOGstock.volume),
-                GOOGstock.price_change,
-                GOOGstock.previous_close],
-        'META':[float(METAstock.predicted_price),   
-                METAstock.live_price,
-                METAstock.open_price,
-                METAstock.high_price,
-                METAstock.low_price,
-                int(METAstock.volume),
-                METAstock.price_change,
-                METAstock.previous_close],
-        'MSFT':[float(MSFTstock.predicted_price),
-                MSFTstock.live_price,
-                MSFTstock.open_price,
-                MSFTstock.high_price,
-                MSFTstock.low_price,
-                int(MSFTstock.volume),
-                MSFTstock.price_change,
-                MSFTstock.previous_close],
-        'NFLX':[float(NFLXstock.predicted_price),
-                NFLXstock.live_price,
-                NFLXstock.open_price,
-                NFLXstock.high_price,
-                NFLXstock.low_price,
-                int(NFLXstock.volume),
-                NFLXstock.price_change,
-                NFLXstock.previous_close],
-        'TSLA':[float(TSLAstock.predicted_price),
-                TSLAstock.live_price,
-                TSLAstock.open_price,
-                TSLAstock.high_price,
-                TSLAstock.low_price,
-                int(TSLAstock.volume),
-                TSLAstock.price_change,
-                TSLAstock.previous_close]
-    })
     #Creates Dataframe for storing News
-    NewsData = pd.DataFrame({
-        'News1': [news1.title,
-                  news1.url,
-                  news1.author,
-                  news1.summary,
-                  news1.urlToImage,
-                  news1.source],
-        'News2': [news2.title,
-                    news2.url,
-                    news2.author,
-                    news2.summary,
-                    news2.urlToImage,
-                    news2.source],
-        'News3': [news3.title,
-                    news3.url,
-                    news3.author,
-                    news3.summary,
-                    news3.urlToImage,
-                    news3.source],
-        'News4': [news4.title,
-                    news4.url,
-                    news4.author,
-                    news4.summary,
-                    news4.urlToImage,
-                    news4.source],
-        'News5': [news5.title,
-                    news5.url,
-                    news5.author,
-                    news5.summary,
-                    news5.urlToImage,
-                    news5.source],
-        'News6': [news6.title,
-                    news6.url,
-                    news6.author,
-                    news6.summary,
-                    news6.urlToImage,
-                    news6.source],
-        })     
+    db['News'].insert_many([
+        {
+            'News': 'News1',
+            'Headline': news1.title,
+            'Link': news1.url,
+            'Author': news1.author,
+            'Description': news1.summary,
+            'Image': news1.urlToImage,
+            'Source': news1.source,},
+        {
+            'News': 'News2',
+            'Headline': news2.title,
+            'Link': news2.url,
+            'Author': news2.author,
+            'Description': news2.summary,
+            'Image': news2.urlToImage,
+            'Source': news2.source,},
+        {
+            'News': 'News3',
+            'Headline': news3.title,
+            'Link': news3.url,
+            'Author': news3.author,
+            'Description': news3.summary,
+            'Image': news3.urlToImage,
+            'Source': news3.source,},
+        {
+            'News': 'News4',
+            'Headline': news4.title,
+            'Link': news4.url,
+            'Author': news4.author,
+            'Description': news4.summary,
+            'Image': news4.urlToImage,
+            'Source': news4.source,},
+        {
+            'News': 'News5',
+            'Headline': news5.title,
+            'Link': news5.url,
+            'Author': news5.author,
+            'Description': news5.summary,
+            'Image': news5.urlToImage,
+            'Source': news5.source,}
+    ])
+
+    db['Commodities'].insert_many([
+        {
+            'Oil': commodities.oil,
+            'Gold': commodities.gold,
+            'Silver': commodities.silver,
+            'aluminium': commodities.aluminium,
+            'Petrol': commodities.petrol,
+        }
+    ])
     #Creates Dataframe for storing Commodities      
-    curr_commod = pd.DataFrame({
-        'currency':[currency.EUR,
-                    currency.GBP,
-                    currency.JPY,
-                    currency.CAD,
-                    currency.INR],
-        'commodities':[  commodities.oil,
-                    commodities.gold,
-                    commodities.silver,
-                    commodities.aluminum,
-                    commodities.petrol],})
+    db['Currency'].insert_many([
+        {
+            'EUR': currency.EUR,
+            'GBP': currency.GBP,
+            'JPY': currency.JPY,
+            'CAD': currency.CAD,
+            'INR': currency.INR,
+        }
+    ])
     
-    date = pd.DataFrame({'date':[lastdate]})
+    db['Date'].insert_one([{ 'Date': datetime.datetime.now()}])
     #Combines all Dataframes into one
-    PredStock = pd.concat([PredictedStock , NewsData, curr_commod,date],axis=1)
+    # PredStock = pd.concat([PredictedStock , NewsData, curr_commod,date],axis=1)
     
-    #output statments for logging/debugging
-    print(PredictedStock['AAPL'],PredictedStock['AMZN'],PredictedStock['GOOG'],PredictedStock['META'],PredictedStock['MSFT'],PredictedStock['NFLX'],PredictedStock['TSLA'])
-    print(NewsData['News1'],NewsData['News2'],NewsData['News3'],NewsData['News4'],NewsData['News5'],NewsData['News6'])
-    print(curr_commod)
-    print(date)
+    # #output statments for logging/debugging
+    # print(PredictedStock['AAPL'],PredictedStock['AMZN'],PredictedStock['GOOG'],PredictedStock['META'],PredictedStock['MSFT'],PredictedStock['NFLX'],PredictedStock['TSLA'])
+    # print(NewsData['News1'],NewsData['News2'],NewsData['News3'],NewsData['News4'],NewsData['News5'],NewsData['News6'])
+    # print(curr_commod)
+    # print(date)
     
-    #Saves Dataframe to CSV
-    PredStock.to_csv('FinanceMetrics/LivePrices/PredictedStock.csv', index=False)
 
 def fetchprices():
     #Fetches Dataframe from CSV
-    cachedata=pd.read_csv('FinanceMetrics/LivePrices/PredictedStock.csv')
+    Stockdata = pd.DataFrame(list(db['Stocks'].find()))
+    Stockdata = Stockdata.drop(columns=['_id'])
+
+    Currencydata = pd.DataFrame(list(db['Currency'].find()))
+    Currencydata = Currencydata.drop(columns=['_id'])
+
+    Commoditiesdata = pd.DataFrame(list(db['Commodities'].find()))
+    Commoditiesdata = Commoditiesdata.drop(columns=['_id'])
+
+    Newsdata = pd.DataFrame(list(db['News'].find()))
+    Newsdata = Newsdata.drop(columns=['_id'])
     #Assigns Dataframe values to Stock Objects
-    AAPLstock.predicted_price=cachedata['AAPL'][0]
-    AAPLstock.live_price=cachedata['AAPL'][1]
-    AAPLstock.open_price=cachedata['AAPL'][2]
-    AAPLstock.high_price=cachedata['AAPL'][3]
-    AAPLstock.low_price=cachedata['AAPL'][4]
-    AAPLstock.volume=cachedata['AAPL'][5]
-    AAPLstock.price_change=cachedata['AAPL'][6]
-    AAPLstock.previous_close=cachedata['AAPL'][7]
+    AAPLstock.predicted_price = Stockdata['Predicted'][0]
+    AAPLstock.live_price = Stockdata['Live'][0]
+    AAPLstock.open_price = Stockdata['Open'][0]
+    AAPLstock.high_price = Stockdata['High'][0]
+    AAPLstock.low_price = Stockdata['Low'][0]
+    AAPLstock.volume = Stockdata['Volume'][0]
+    AAPLstock.price_change = Stockdata['Price Change'][0]
+    AAPLstock.previous_close = Stockdata['Previous Close'][0]
+
+    AMZNstock.predicted_price = Stockdata['Predicted'][1]
+    AMZNstock.live_price = Stockdata['Live'][1]
+    AMZNstock.open_price = Stockdata['Open'][1]
+    AMZNstock.high_price = Stockdata['High'][1]
+    AMZNstock.low_price = Stockdata['Low'][1]
+    AMZNstock.volume = Stockdata['Volume'][1]
+    AMZNstock.price_change = Stockdata['Price Change'][1]
+    AMZNstock.previous_close = Stockdata['Previous Close'][1]
+
+    GOOGstock.predicted_price = Stockdata['Predicted'][2]
+    GOOGstock.live_price = Stockdata['Live'][2]
+    GOOGstock.open_price = Stockdata['Open'][2]
+    GOOGstock.high_price = Stockdata['High'][2]
+    GOOGstock.low_price = Stockdata['Low'][2]
+    GOOGstock.volume = Stockdata['Volume'][2]
+    GOOGstock.price_change = Stockdata['Price Change'][2]
+    GOOGstock.previous_close = Stockdata['Previous Close'][2]
+
+    METAstock.predicted_price = Stockdata['Predicted'][3]
+    METAstock.live_price = Stockdata['Live'][3]
+    METAstock.open_price = Stockdata['Open'][3]
+    METAstock.high_price = Stockdata['High'][3]
+    METAstock.low_price = Stockdata['Low'][3]
+    METAstock.volume = Stockdata['Volume'][3]
+    METAstock.price_change = Stockdata['Price Change'][3]
+    METAstock.previous_close = Stockdata['Previous Close'][3]
+
+    MSFTstock.predicted_price = Stockdata['Predicted'][4]
+    MSFTstock.live_price = Stockdata['Live'][4]
+    MSFTstock.open_price = Stockdata['Open'][4]
+    MSFTstock.high_price = Stockdata['High'][4]
+    MSFTstock.low_price = Stockdata['Low'][4]
+    MSFTstock.volume = Stockdata['Volume'][4]
+    MSFTstock.price_change = Stockdata['Price Change'][4]
+    MSFTstock.previous_close = Stockdata['Previous Close'][4]
     
-    AMZNstock.predicted_price=cachedata['AMZN'][0]
-    AMZNstock.live_price=cachedata['AMZN'][1]
-    AMZNstock.open_price=cachedata['AMZN'][2]
-    AMZNstock.high_price=cachedata['AMZN'][3]
-    AMZNstock.low_price=cachedata['AMZN'][4]
-    AMZNstock.volume=cachedata['AMZN'][5]
-    AMZNstock.price_change=cachedata['AMZN'][6]
-    AMZNstock.previous_close=cachedata['AMZN'][7]
+    NFLXstock.predicted_price = Stockdata['Predicted'][5]
+    NFLXstock.live_price = Stockdata['Live'][5]
+    NFLXstock.open_price = Stockdata['Open'][5]
+    NFLXstock.high_price = Stockdata['High'][5]
+    NFLXstock.low_price = Stockdata['Low'][5]
+    NFLXstock.volume = Stockdata['Volume'][5]
+    NFLXstock.price_change = Stockdata['Price Change'][5]
+    NFLXstock.previous_close = Stockdata['Previous Close'][5]
     
-    GOOGstock.predicted_price=cachedata['GOOG'][0]
-    GOOGstock.live_price=cachedata['GOOG'][1]
-    GOOGstock.open_price=cachedata['GOOG'][2]
-    GOOGstock.high_price=cachedata['GOOG'][3]
-    GOOGstock.low_price=cachedata['GOOG'][4]
-    GOOGstock.volume=cachedata['GOOG'][5]
-    GOOGstock.price_change=cachedata['GOOG'][6]
-    GOOGstock.previous_close=cachedata['GOOG'][7]
+    TSLAstock.predicted_price = Stockdata['Predicted'][6]
+    TSLAstock.live_price = Stockdata['Live'][6]
+    TSLAstock.open_price = Stockdata['Open'][6]
+    TSLAstock.high_price = Stockdata['High'][6]
+    TSLAstock.low_price = Stockdata['Low'][6]
+    TSLAstock.volume = Stockdata['Volume'][6]
+    TSLAstock.price_change = Stockdata['Price Change'][6]
+    TSLAstock.previous_close = Stockdata['Previous Close'][6]
     
-    METAstock.predicted_price=cachedata['META'][0]
-    METAstock.live_price=cachedata['META'][1]
-    METAstock.open_price=cachedata['META'][2]
-    METAstock.high_price=cachedata['META'][3]
-    METAstock.low_price=cachedata['META'][4]
-    METAstock.volume=cachedata['META'][5]
-    METAstock.price_change=cachedata['META'][6]
-    METAstock.previous_close=cachedata['META'][7]
-    
-    MSFTstock.predicted_price=cachedata['MSFT'][0]
-    MSFTstock.live_price=cachedata['MSFT'][1]
-    MSFTstock.open_price=cachedata['MSFT'][2]
-    MSFTstock.high_price=cachedata['MSFT'][3]
-    MSFTstock.low_price=cachedata['MSFT'][4]
-    MSFTstock.volume=cachedata['MSFT'][5]
-    MSFTstock.price_change=cachedata['MSFT'][6]
-    MSFTstock.previous_close=cachedata['MSFT'][7]
-    
-    NFLXstock.predicted_price=cachedata['NFLX'][0]
-    NFLXstock.live_price=cachedata['NFLX'][1]
-    NFLXstock.open_price=cachedata['NFLX'][2]
-    NFLXstock.high_price=cachedata['NFLX'][3]
-    NFLXstock.low_price=cachedata['NFLX'][4]
-    NFLXstock.volume=cachedata['NFLX'][5]
-    NFLXstock.price_change=cachedata['NFLX'][6]
-    NFLXstock.previous_close=cachedata['NFLX'][7]
-    
-    TSLAstock.predicted_price=cachedata['TSLA'][0]
-    TSLAstock.live_price=cachedata['TSLA'][1]
-    TSLAstock.open_price=cachedata['TSLA'][2]
-    TSLAstock.high_price=cachedata['TSLA'][3]
-    TSLAstock.low_price=cachedata['TSLA'][4]
-    TSLAstock.volume=cachedata['TSLA'][5]
-    TSLAstock.price_change=cachedata['TSLA'][6]
-    TSLAstock.previous_close=cachedata['TSLA'][7]
     #Assigns Dataframe values to News Objects
-    news1.title=cachedata['News1'][0]
-    news1.url=cachedata['News1'][1]
-    news1.author=cachedata['News1'][2]
-    news1.summary=cachedata['News1'][3]
-    news1.urlToImage=cachedata['News1'][4]
-    news1.source=cachedata['News1'][5]
+    news1.title=Newsdata['Headline'][0]
+    news1.url=Newsdata['Link'][0]
+    news1.author=Newsdata['Author'][0]
+    news1.summary=Newsdata['Description'][0]
+    news1.urlToImage=Newsdata['Image'][0]
+    news1.source=Newsdata['Source'][0]
     
-    news2.title=cachedata['News2'][0]
-    news2.url=cachedata['News2'][1]
-    news2.author=cachedata['News2'][2]
-    news2.summary=cachedata['News2'][3]
-    news2.urlToImage=cachedata['News2'][4]
-    news2.source=cachedata['News2'][5]
+    news2.title=Newsdata['Headline'][1]
+    news2.url=Newsdata['Link'][1]
+    news2.author=Newsdata['Author'][1]
+    news2.summary=Newsdata['Description'][1]
+    news2.urlToImage=Newsdata['Image'][1]
+    news2.source=Newsdata['Source'][1]
     
-    news3.title=cachedata['News3'][0]
-    news3.url=cachedata['News3'][1]
-    news3.author=cachedata['News3'][2]
-    news3.summary=cachedata['News3'][3]
-    news3.urlToImage=cachedata['News3'][4]
-    news3.source=cachedata['News3'][5]
+    news3.title=Newsdata['Headline'][2]
+    news3.url=Newsdata['Link'][2]
+    news3.author=Newsdata['Author'][2]
+    news3.summary=Newsdata['Description'][2]
+    news3.urlToImage=Newsdata['Image'][2]
+    news3.source=Newsdata['Source'][2]
     
-    news4.title=cachedata['News4'][0]
-    news4.url=cachedata['News4'][1]
-    news4.author=cachedata['News4'][2]
-    news4.summary=cachedata['News4'][3]
-    news4.urlToImage=cachedata['News4'][4]
-    news4.source=cachedata['News4'][5]
+    news4.title=Newsdata['Headline'][3]
+    news4.url=Newsdata['Link'][3]
+    news4.author=Newsdata['Author'][3]
+    news4.summary=Newsdata['Description'][3]
+    news4.urlToImage=Newsdata['Image'][3]
+    news4.source=Newsdata['Source'][3]
     
-    news5.title=cachedata['News5'][0]
-    news5.url=cachedata['News5'][1]
-    news5.author=cachedata['News5'][2]
-    news5.summary=cachedata['News5'][3]
-    news5.urlToImage=cachedata['News5'][4]
-    news5.source=cachedata['News5'][5]
+    news5.title=Newsdata['Headline'][4]
+    news5.url=Newsdata['Link'][4]
+    news5.author=Newsdata['Author'][4]
+    news5.summary=Newsdata['Description'][4]
+    news5.urlToImage=Newsdata['Image'][4]
+    news5.source=Newsdata['Source'][4]
     
-    news6.title=cachedata['News6'][0]
-    news6.url=cachedata['News6'][1]
-    news6.author=cachedata['News6'][2]
-    news6.summary=cachedata['News6'][3]
-    news6.urlToImage=cachedata['News6'][4]
-    news6.source=cachedata['News6'][5]
+    news6.title=Newsdata['Headline'][5]
+    news6.url=Newsdata['Link'][5]
+    news6.author=Newsdata['Author'][5]
+    news6.summary=Newsdata['Description'][5]
+    news6.urlToImage=Newsdata['Image'][5]
+    news6.source=Newsdata['Source'][5]
+    
+
     #Assigns Dataframe values to Currency Objects
-    currency.EUR=cachedata['currency'][0]
-    currency.GBP=cachedata['currency'][1]
-    currency.JPY=cachedata['currency'][2]
-    currency.CAD=cachedata['currency'][3]
-    currency.INR=cachedata['currency'][4]
+    currency.EUR= Currencydata['EUR']
+    currency.GBP= Currencydata['GBP']
+    currency.JPY= Currencydata['JPY']
+    currency.CAD= Currencydata['CAD']
+    currency.INR= Currencydata['INR']
+    
     #Assigns Dataframe values to Commodity Objects
-    commodities.oil=cachedata['commodities'][0]
-    commodities.gold=cachedata['commodities'][1]
-    commodities.silver=cachedata['commodities'][2]
-    commodities.aluminum=cachedata['commodities'][3]
-    commodities.petrol=cachedata['commodities'][4]
+    commodities.oil=Commoditiesdata['Oil']
+    commodities.gold=Commoditiesdata['Gold']
+    commodities.silver=Commoditiesdata['Silver']
+    commodities.aluminium=Commoditiesdata['Aluminium']
+    commodities.petrol=Commoditiesdata['Petrol']
     
     #output statments for logging/debugging
     print("Cached Data Loaded")
-    print(cachedata['AAPL'],cachedata['MSFT'],cachedata['NFLX'],cachedata['TSLA'],cachedata['META'],cachedata['GOOG'],cachedata['AMZN'])
-    print(cachedata['News1'],cachedata['News2'],cachedata['News3'],cachedata['News4'],cachedata['News5'],cachedata['News6'])
-    print(cachedata['currency'])
-    print(cachedata['commodities'])
-    print(cachedata['date'])
     
 #converts the response from the API to feed into neural network
 def conversion(response):
@@ -358,7 +387,7 @@ def get_stocks():
     stocks2_api_key=os.environ.get('STOCKS2_API_KEY')
     symbol = 'AAPL'
     url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={stocks_api_key}'
-    response = requests.get(url)   
+    response = requests.get(url,timeout=10)   
     data = response.json() 
     #loads data into stock object
     AAPLstock.open_price = data['Global Quote']['02. open']
@@ -372,7 +401,7 @@ def get_stocks():
 
     symbol = 'AMZN'
     url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={stocks_api_key}'
-    response = requests.get(url)   
+    response = requests.get(url,timeout=10)   
     data = response.json() 
     AMZNstock.open_price = data['Global Quote']['02. open']
     AMZNstock.high_price = data['Global Quote']['03. high']
@@ -460,7 +489,7 @@ def get_commodities():
     commodities.silver = commodity_ticker.history(period="5d")["Close"].iloc[-1]
     
     commodity_ticker = yf.Ticker("ALI=F")
-    commodities.aluminum = commodity_ticker.history(period="5d")["Close"].iloc[-1]
+    commodities.aluminium = commodity_ticker.history(period="5d")["Close"].iloc[-1]
     
     commodity_ticker = yf.Ticker("CL=F")
     commodities.oil = commodity_ticker.history(period="5d")["Close"].iloc[-1]
@@ -472,7 +501,7 @@ def get_news():
     #loads data into news object
     news_api_key=os.environ.get('NEWS_API_KEY')
     url = f'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&apikey={news_api_key}&topics=finance'
-    response = requests.get(url)
+    response = requests.get(url,timeout=10)
     data=response.json()
     news1.title = data['feed'][0]['title']
     news1.url = data['feed'][0]['url']
@@ -612,7 +641,7 @@ def compiledata():
     'OIL':round(commodities.oil,2),
     'SILVER':round(commodities.silver,2),
     'PETROL':round(commodities.petrol,2),
-    'ALUMINIUM':round(commodities.aluminum,2)}
+    'ALUMINIUM':round(commodities.aluminium,2)}
     news1_data = {
     'title':news1.title,
     'url':news1.url,

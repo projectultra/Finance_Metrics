@@ -25,7 +25,7 @@ SECRET_KEY = get_random_secret_key()
 DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1',
-                 'financemetrics.onrender.com']
+                 'localhost',]
 
 
 # Application definition
@@ -77,8 +77,11 @@ WSGI_APPLICATION = 'FM.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'FinanceMetrics',
+        'ENFORCE_SCHEMA': False,
+        'HOST': 'localhost',
+        'PORT': 27017,
     }
 }
 

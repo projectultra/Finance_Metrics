@@ -1,5 +1,4 @@
 from django.db import models
-
 # Create your models here.
 class EconomicIndicators(models.Model):
     inflation=models.FloatField()
@@ -93,7 +92,7 @@ class commodities(models.Model):
     oil=models.FloatField()
     gold=models.FloatField()
     silver=models.FloatField()
-    aluminum=models.FloatField()
+    aluminium=models.FloatField()
     petrol=models.FloatField()
 
 class news1(models.Model):

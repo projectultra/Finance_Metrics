@@ -1,9 +1,3 @@
----
-runme:
-  id: 01HH44NH0JBDFAFKPBYKDAZ0X4
-  version: v2.0
----
-
 # Stock Prediction Web Application
 
 This is a web application built with Django that fetches live stock data, processes the data, and predicts stock prices using a TensorFlow Keras model.

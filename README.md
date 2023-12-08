@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01HH44NH0JBDFAFKPBYKDAZ0X4
+  version: v2.0
+---
+
 # Stock Prediction Web Application
 
 This is a web application built with Django that fetches live stock data, processes the data, and predicts stock prices using a TensorFlow Keras model.
@@ -13,6 +19,12 @@ The Stock Prediction Web Application allows users to access real-time stock data
 - Imports a trained TensorFlow Keras model for stock price prediction
 - Displays predicted stock prices on a webpage
 
+![Home](./images/image8.png)
+![stocks](./images/image4.png)
+![currencies](./images/image2.png)
+![commodities](./images/image1.png)
+![news](./images/image6.png)
+
 ## Technologies Used
 
 - Python
@@ -27,14 +39,14 @@ Local Installation
 
 1. Clone the repository:
 
-```sh
+```sh {"id":"01HH44NH0GCR6Z704TDQPT0E35"}
 git clone https://github.com/projectultra/Finance_Metrics.git
 
 ```
 
 2. Install the required dependencies:
 
-```sh
+```sh {"id":"01HH44NH0GCR6Z704TDV2TXBGZ"}
 pip install -r requirements.txt
 
 ```
@@ -45,7 +57,7 @@ pip install -r requirements.txt
 
 4. Start the Django development server:
 
-```sh
+```sh {"id":"01HH44NH0GCR6Z704TDY7ZARCQ"}
 python manage.py runserver
 
 ```
